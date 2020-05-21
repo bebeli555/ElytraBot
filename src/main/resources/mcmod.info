@@ -1,0 +1,16 @@
+[
+{
+  "modid": "eb",
+  "name": "ElytraPathfinder",
+  "description": "Elytra Pathfinding bot for 2b2t Highways",
+  "version": "${1.0}",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["bebeli555"],
+  "credits": "bebeli555",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
