@@ -292,6 +292,11 @@ public class Diagonal {
 	}
 	
 	public static void SetYaws() {
+		// First check if Yaw is out of valid range (positive or negative 0-180)
+		// This prevents snapping to the wrong axis on diagonals
+		if (Yaw < -180.0) Yaw += 360;
+		else if (Yaw > 180) Yaw -= 360;
+		
 		//These shits took fucking an hour to figure out...
 		if (direction.equals(EnumFacing.NORTH)) {
 			double YawCheck = Closer(135, -135, Yaw);
