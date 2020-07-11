@@ -1,0 +1,94 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = 'SpongePowered'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+
+version = "1.8"
+group = "com.bebeli555.Elytrabot"
+archivesBaseName = "ElytraBot"
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2768"
+    runDir = "run"
+    mappings = "snapshot_20171003"
+    coreMod = 'com.bebeli555.ElytraBot.Mixin.MixinLoader'
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven {
+        name = 'spongepowered-repo'
+        url = 'http://repo.spongepowered.org/maven/'
+    }
+    maven {
+        name = 'impactdevelopment-repo'
+        url = 'https://impactdevelopment.github.io/maven/'
+    }
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+	compile 'cabaletta:baritone-api:1.2'
+	compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+        exclude module: 'log4j-core'
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'MixinConfigs': 'mixins.elytrabot.json',
+                'tweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': 0,
+                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLCorePlugin': 'com.bebeli555.ElytraBot.Mixin.MixinLoader',
+                'ForceLoadAsMod': 'true',
+                'FMLAT': 'eb_at.cfg'
+        )
+    }
+}
+
+mixin {
+	defaultObfuscationEnv searge
+    add sourceSets.main, "mixins.elytrabot.refmap.json"
+}
