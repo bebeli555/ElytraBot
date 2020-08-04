@@ -3,11 +3,10 @@ package me.bebeli555.ElytraBot.PathFinding;
 import java.util.ArrayList;
 
 import me.bebeli555.ElytraBot.Main;
-import com.mojang.realmsclient.gui.ChatFormatting;
-
+import me.bebeli555.ElytraBot.Renderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 
 public class AStar {
 	static Minecraft mc = Minecraft.getMinecraft();
@@ -15,15 +14,16 @@ public class AStar {
 	static ArrayList<BlockPos> Open = new ArrayList<BlockPos>();
 	public static ArrayList<BlockPos> Closed = new ArrayList<BlockPos>();
 	public static ArrayList<BlockPos> FinalPath = new ArrayList<BlockPos>();
+	public static ArrayList<BlockPos> LeftGaps = new ArrayList<BlockPos>();
 	public static BlockPos Closest;
 	public static BlockPos Furthest;
 	static BlockPos Start;
 	static BlockPos Goal;
 	static BlockPos Current;
 	static BlockPos Final;
-	public static int Fails = 0;
+	public static boolean LeaveGap = false;
 
-	public static ArrayList<BlockPos> GetPath(BlockPos start, BlockPos goal, int LoopAmount, boolean Overworld) {
+	public static ArrayList<BlockPos> GetPath(BlockPos start, BlockPos goal, int LoopAmount, boolean HighwayMode, boolean IgnoreAirNextToSolid) {
 		Reset();
 		Main.status = "Calculating Path";
 		Start = start;
@@ -33,27 +33,19 @@ public class AStar {
 		// Add startup pos to Open list if its empty
 		if (Open.isEmpty()) {
 			Closed.add(Player);
-			AddToOpen(Player);
+			AddToOpen(Player, IgnoreAirNextToSolid, false);
 		}
 
 		if (Current == null) {
 			Current = Player;
 		}
-
+		
 		// Get the best path using A*
 		for (int i2 = 0; i2 < LoopAmount; i2++) {
 			// Check if were in the goal
 			if (Current.getX() == Goal.getX()) {
 				if (Current.getZ() == Goal.getZ()) {
-					FinalPath = Closed;
-					//Just spam this to make sure theres no fucked up spots
-					for (int i = 0; i < 100; i++) {
-						if (IsPathFixed()) {
-							break;
-						} else {
-							FixPath();
-						}
-					}
+					SetPath();
 					return FinalPath;
 				}
 			}
@@ -61,18 +53,16 @@ public class AStar {
 			int LowestF = Integer.MAX_VALUE;
 			for (int i = 0; i < Open.size(); i++) {
 				if (FCost(Open.get(i)) < LowestF) {
-					if (IsCollided(Open.get(i)) < 2) {
-						LowestF = FCost(Open.get(i));
-						Current = Open.get(i);
-					}
+					LowestF = FCost(Open.get(i));
+					Current = Open.get(i);
 				}
 			}
 			LowestF = Integer.MAX_VALUE;
-
+ 
 			// Add them to the list and stuff
 			Closed.add(Current);
 			Open.remove(Current);
-			AddToOpen(Current);
+			AddToOpen(Current, IgnoreAirNextToSolid, HighwayMode);
 			
 			//Closest
 			if (Closest == null) {
@@ -80,15 +70,6 @@ public class AStar {
 			} else {
 				if (FCost(Current) < FCost(Closest)) {
 					Closest = Current;
-					Fails = 0;
-				} else {
-					Fails++;
-				}
-			}
-			
-			if (Overworld == true) {
-				if (Fails > 15) {
-					return new ArrayList<BlockPos>();
 				}
 			}
 			
@@ -120,7 +101,9 @@ public class AStar {
 	}
 
 	// Add the surrounding blocks to the open list IF their clear
-	public static void AddToOpen(BlockPos Pos) {
+	public static void AddToOpen(BlockPos Pos, boolean IgnoreAirNextToSolid, boolean Highway) {
+		boolean IsAdded = false;
+		BlockPos Gap = new BlockPos(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE);
 		ArrayList<BlockPos> OpenPositions = new ArrayList<BlockPos>();
 		OpenPositions.add(new BlockPos(Pos.add(1, 0, 0)));
 		OpenPositions.add(new BlockPos(Pos.add(-1, 0, 0)));
@@ -129,187 +112,141 @@ public class AStar {
 
 		for (int i = 0; i < OpenPositions.size(); i++) {
 			if (!GetPath.IsSolid(OpenPositions.get(i))) {
-				if (!Open.contains(OpenPositions.get(i))) {
+				if (!Closed.contains(OpenPositions.get(i))) {
 					if (GetPath.IsBlockInRenderDistance(OpenPositions.get(i))) {
-						Open.add(OpenPositions.get(i));
+						//Set parents
+						double value = FCost(OpenPositions.get(i));
+						Node n = Node.GetNodeFromBlockpos(OpenPositions.get(i));
+						if (n == null) {
+							n = new Node(OpenPositions.get(i));
+						}
+						
+						if (!Open.contains(OpenPositions.get(i))) {
+							n.SetCost(value);
+							n.SetParent(Current);
+							
+							if (Highway == true && LeaveGap == true) {
+								if (ShouldLeaveAsGap(OpenPositions.get(i))) {
+									if (!LeftGaps.contains(OpenPositions.get(i))) {
+										LeftGaps.add(OpenPositions.get(i));
+									}
+								}
+
+								if (LeftGaps.size() > 1) {
+									LeaveGap = false;
+								}
+							}
+
+							if (IgnoreAirNextToSolid == true) {
+								if (!HasBlockAround(OpenPositions.get(i))) {
+									Open.add(OpenPositions.get(i));
+								}
+							}
+
+							if (Highway == true) {
+								if (!LeftGaps.contains(OpenPositions.get(i))) {
+									Open.add(OpenPositions.get(i));
+								}
+							}
+						} else {
+							if (value > n.GetCost()) {
+								n.SetCost(value);
+								n.SetParent(Current);
+							}
+						}
+						Node.Nodes.add(n);
 					}
 				}
 			}
 		}
 	}
-
-	// Checks if the closed thing would be collided with other closed things
-	public static int IsCollided(BlockPos Pos) {
-		int collides = 0;
-		BlockPos Side1 = new BlockPos(Pos.add(1, 0, 0));
-		BlockPos Side2 = new BlockPos(Pos.add(-1, 0, 0));
-		BlockPos Side3 = new BlockPos(Pos.add(0, 0, 1));
-		BlockPos Side4 = new BlockPos(Pos.add(0, 0, -1));
-
-		if (Closed.contains(Side1)) {
-			collides++;
+	
+	public static boolean ShouldLeaveAsGap (BlockPos Pos) {
+		BlockPos Check;
+		if (Main.direction.equals(EnumFacing.NORTH)) {
+			Check = new BlockPos(Pos.add(0, 0, -1));
+		} else if (Main.direction.equals(EnumFacing.WEST)) {
+			Check = new BlockPos(Pos.add(-1, 0, 0));
+		} else if (Main.direction.equals(EnumFacing.EAST)) {
+			Check = new BlockPos(Pos.add(1, 0, 0));
+		} else {
+			Check = new BlockPos(Pos.add(0, 0, 1));
 		}
-
-		if (Closed.contains(Side2)) {
-			collides++;
+		
+		if (GetPath.IsSolid(Check)) {
+			return true;
 		}
-
-		if (Closed.contains(Side3)) {
-			collides++;
-		}
-
-		if (Closed.contains(Side4)) {
-			collides++;
-		}
-
-		return collides;
+		return false;
 	}
+	
+	//Checks if this not solid block has any solid blocks around it.
+	public static boolean HasBlockAround(BlockPos Pos) {
+		ArrayList<BlockPos> Positions = new ArrayList<BlockPos>();
+		Positions.add(new BlockPos(Pos.add(1, 0, 0)));
+		Positions.add(new BlockPos(Pos.add(-1, 0, 0)));
+		Positions.add(new BlockPos(Pos.add(0, 0, 1)));
+		Positions.add(new BlockPos(Pos.add(0, 0, -1)));
+		Positions.add(new BlockPos(Pos.add(1, 0, 1)));
+		Positions.add(new BlockPos(Pos.add(-1, 0, -1)));
+		Positions.add(new BlockPos(Pos.add(-1, 0, 1)));
+		Positions.add(new BlockPos(Pos.add(1, 0, -1)));
+		
+		Positions.add(new BlockPos(Pos.add(1, 1, 0)));
+		Positions.add(new BlockPos(Pos.add(-1, 1, 0)));
+		Positions.add(new BlockPos(Pos.add(0, 1, 1)));
+		Positions.add(new BlockPos(Pos.add(0, 1, -1)));
+		Positions.add(new BlockPos(Pos.add(1, 1, 1)));
+		Positions.add(new BlockPos(Pos.add(-1, 1, -1)));
+		Positions.add(new BlockPos(Pos.add(-1, 1, 1)));
+		Positions.add(new BlockPos(Pos.add(1, 1, -1)));
+		Positions.add(new BlockPos(Pos.add(0, 1, 0)));
+		
+		Positions.add(new BlockPos(Pos.add(1, -1, 0)));
+		Positions.add(new BlockPos(Pos.add(-1, -1, 0)));
+		Positions.add(new BlockPos(Pos.add(0, -1, 1)));
+		Positions.add(new BlockPos(Pos.add(0, -1, -1)));
+		Positions.add(new BlockPos(Pos.add(1, -1, 1)));
+		Positions.add(new BlockPos(Pos.add(-1, -1, -1)));
+		Positions.add(new BlockPos(Pos.add(-1, -1, 1)));
+		Positions.add(new BlockPos(Pos.add(1, -1, -1)));
+		Positions.add(new BlockPos(Pos.add(0, -1, 0)));
 
-	// Checks if the Pos is connected to the other pos
-	public static boolean IsConnected(BlockPos From, BlockPos To) {
-		BlockPos Side1 = new BlockPos(From.add(1, 0, 0));
-		BlockPos Side2 = new BlockPos(From.add(-1, 0, 0));
-		BlockPos Side3 = new BlockPos(From.add(0, 0, 1));
-		BlockPos Side4 = new BlockPos(From.add(0, 0, -1));
-
-		if (From.getX() == To.getX() && From.getZ() == To.getZ()) {
-			return true;
+		for (int i = 0; i < Positions.size(); i++) {
+			if (GetPath.IsSolid(Positions.get(i))) {
+				return true;
+			}
 		}
-
-		if (Side1.getX() == To.getX() && Side1.getZ() == To.getZ()) {
-			return true;
-		}
-
-		if (Side2.getX() == To.getX() && Side2.getZ() == To.getZ()) {
-			return true;
-		}
-
-		if (Side3.getX() == To.getX() && Side3.getZ() == To.getZ()) {
-			return true;
-		}
-
-		if (Side4.getX() == To.getX() && Side4.getZ() == To.getZ()) {
-			return true;
-		}
-
 		return false;
 	}
 
-	public static BlockPos GetBestBlock(BlockPos Pos) {
-		ArrayList<BlockPos> OpenPositions = new ArrayList<BlockPos>();
-		OpenPositions.add(new BlockPos(Pos.add(1, 0, 0)));
-		OpenPositions.add(new BlockPos(Pos.add(-1, 0, 0)));
-		OpenPositions.add(new BlockPos(Pos.add(0, 0, 1)));
-		OpenPositions.add(new BlockPos(Pos.add(0, 0, -1)));
-		OpenPositions.add(new BlockPos(Pos.add(1, 0, 1)));
-		OpenPositions.add(new BlockPos(Pos.add(-1, 0, 1)));
-		OpenPositions.add(new BlockPos(Pos.add(1, 0, -1)));
-		OpenPositions.add(new BlockPos(Pos.add(-1, 0, -1)));
+	public static void SetPath() {
+		Renderer.PositionsGreen = Closed;
+		try {
+			// Backtrace path.
+			Node n = Node.GetNodeFromBlockpos(Current);
+			if (n == null) {
+				n = Node.Nodes.get(Node.Nodes.size() - 1);
+			}
+			FinalPath.add(n.GetNode());
 
-		int LowestF = Integer.MAX_VALUE;
-		BlockPos BestPath = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-
-		for (int i = 0; i < OpenPositions.size(); i++) {
-			if (FCost(OpenPositions.get(i)) < LowestF) {
-				if (FinalPath.contains(OpenPositions.get(i))) {
-					LowestF = FCost(OpenPositions.get(i));
-					BestPath = OpenPositions.get(i);
-				}
+			while (n.GetParent() != null) {
+				FinalPath.add(n.GetParent());
+				n = Node.GetNodeFromBlockpos(n.GetParent());
 			}
+		}catch (NullPointerException e) {
+			return;
 		}
-
-		return BestPath;
-	}
-
-	public static void FixPath() {
-		//Fixes all the unused spots in the path that the A* Algorithm gives you
-		//By checking if the block has only 1 block path next to it
-		//and if its not the start or goal position then removing that block
-		for (int i = 0; i < FinalPath.size(); i++) {
-			BlockPos Pos = FinalPath.get(i);
-			if (IsNotStart(Pos)) {
-				if (IsNotGoal(Pos)) {
-					if (IsCollided(Pos) == 1) {
-						FinalPath.remove(Pos);
-					}
-				}
-			}
-		}
-	}
-	
-	public static boolean IsPathFixed() {
-		for (int i = 0; i < FinalPath.size(); i++) {
-			BlockPos Pos = FinalPath.get(i);
-			if (IsNotStart(Pos)) {
-				if (IsNotGoal(Pos)) {
-					if (IsCollided(Pos) == 1) {
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-	
-	public static ArrayList<BlockPos> GetClosedList() {
-		boolean Contains = false;
-		ArrayList<BlockPos> Test = Closed;
-		for (int i = 0; i < Test.size(); i++) {
-			BlockPos Pos = Test.get(i);
-			//Fix path
-			if (Furthest.getX() != Pos.getX()) {
-				if (Furthest.getZ() != Pos.getZ()) {
-					if (Closest.getX() != Pos.getX()) {
-						if (Closest.getZ() != Pos.getZ()) {
-							if (IsCollided(Pos) == 1) {
-								Test.remove(Pos);
-							}
-						}
- 					}
-				}
-			}
-			//Fix the other spots in this Closed list
-			if (Pos.getX() == Closest.getX()) {
-				if (Pos.getZ() == Closest.getZ()) {
-					Contains = true;
-				}
-			}
-			if (Contains == true) {
-				Test.remove(Pos);
-			}
-		}
-		return Test;
-	}
-	
-	public static boolean IsNotStart(BlockPos Pos) {
-		if (Pos.getX() == Start.getX()) {
-			if (Pos.getZ() == Start.getZ()) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public static boolean IsNotGoal(BlockPos Pos) {
-		if (Pos.getX() == Goal.getX()) {
-			if (Pos.getZ() == Goal.getZ()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public static ArrayList<BlockPos> GetPath() {
-		return Closed;
 	}
 	
 	public static void Reset() {
 		Open.clear();
-		Closed.clear();
+		Closed = new ArrayList<BlockPos>();
+		FinalPath = new ArrayList<BlockPos>();
+		LeftGaps.clear();
+		Node.Nodes.clear();
 		Current = null;
 		Final = null;
 		Closest = null;
 		Furthest = null;
-		Fails = 0;
 	}
 }

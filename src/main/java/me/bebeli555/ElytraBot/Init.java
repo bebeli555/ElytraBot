@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import me.bebeli555.ElytraBot.OpenTerrain.GetGoal;
 import me.bebeli555.ElytraBot.PathFinding.Center;
 import me.bebeli555.ElytraBot.PathFinding.GetPath;
 import me.bebeli555.ElytraBot.Settings.AutoEat;
@@ -45,7 +47,8 @@ public class Init {
 		MinecraftForge.EVENT_BUS.register(new Gui());
 		MinecraftForge.EVENT_BUS.register(new AutoEat());
 		MinecraftForge.EVENT_BUS.register(new KeyBind());
-		MinecraftForge.EVENT_BUS.register(new me.bebeli555.ElytraBot.Overworld.Main());
+		MinecraftForge.EVENT_BUS.register(new me.bebeli555.ElytraBot.OpenTerrain.Main());
+		MinecraftForge.EVENT_BUS.register(new Snake());
 		Main.FlySpeed = Settings.FlySpeed;
 		SetVar();
 	}
@@ -54,6 +57,10 @@ public class Init {
 	//Aww Jeez
 	public static void SetVar() {
 		if (test2 == false) {
+			if (Path2.equals(".")) {
+				
+			}
+			
 			test2 = true;
 			try {
 				String UseBaritone = "";
@@ -147,7 +154,7 @@ public class Init {
 	//Generates Settings file
 	public static void GenerateFile() {
 		// Create Settings Folder
-		File file = new File(System.getenv("APPDATA"), ".minecraft/ElytraBot");
+		File file = new File(mc.mcDataDir.getPath() + "/ElytraBot");
 		if (file.mkdir()) {
 			System.out.println("ElytraBot: Directory Created");
 		} else {
@@ -155,7 +162,7 @@ public class Init {
 		}
 
 		// Create Settings file inside ElytaBot Directory
-		File file2 = new File(System.getenv("APPDATA"), ".minecraft/ElytraBot/Settings.txt");
+		File file2 = new File(Path);
 		try {
 			if (file2.createNewFile()) {
 				System.out.println("ElytraBot: Settings Created");

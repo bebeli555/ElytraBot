@@ -186,12 +186,15 @@ public class AutoRepair {
 	}
 	
 	public static boolean HasXP() {
-		for (int i = 0; i < 36; ++i) {
-			final ItemStack stack2 = mc.player.inventory.getStackInSlot(i);
-			if (stack2.getItem() == Items.EXPERIENCE_BOTTLE) {
-				return true;
+		for (int i = 9; i < 44; ++i) {
+			try {
+				final ItemStack stack2 = mc.player.inventory.getStackInSlot(i);
+				if (stack2.getItem() == Items.EXPERIENCE_BOTTLE) {
+					return true;
+				}
+			}catch (NullPointerException e) {
+				
 			}
-
 		}
 		return false;
 	}

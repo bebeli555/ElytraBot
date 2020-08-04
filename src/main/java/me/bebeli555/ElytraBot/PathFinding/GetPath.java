@@ -40,16 +40,20 @@ public class GetPath {
 	public static String WhereToGo() {
 		try {
 			LastCalculation++;
-			String BestPath = "Null";
 			BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-			BlockPos Start = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+			
+			//Leave gap when going fast. to prevent rubberbanding by 2b anticheat
+			if (ShouldLeaveGap()) {
+				AStar.LeaveGap = true;
+			}
+			
 			if (Path.isEmpty()) {
 				if (LastCalculation > 5) {
 					ReCalculatePath(false);
 				}
 			}
 
-			if ((int) mc.player.posY != Path.get(0).getY()) {
+			if ((int) mc.player.posY != Path.get(Path.size() - 1).getY()) {
 				if (LastCalculation > 5) {
 					ReCalculatePath(false);
 				}
@@ -63,7 +67,7 @@ public class GetPath {
 					}
 				}
 			}
-
+			
 			if (!IsPlayerMoving()) {
 				ReCalculatePath(false);
 			}
@@ -71,8 +75,8 @@ public class GetPath {
 			// If player is far from path then recalculate it
 			int PlayerX = Math.abs((int) mc.player.posX);
 			int PlayerZ = Math.abs((int) mc.player.posZ);
-			int PathX = Math.abs(Path.get(0).getX());
-			int PathZ = Math.abs(Path.get(0).getZ());
+			int PathX = Math.abs(Path.get(Path.size() - 1).getX());
+			int PathZ = Math.abs(Path.get(Path.size() - 1).getZ());
 
 			if (Math.abs(PlayerX - PathX) > 10) {
 				if (LastCalculation > 15) {
@@ -90,63 +94,63 @@ public class GetPath {
 			}
 
 			GetPath.RemovePassedSpots();
-			BlockPos Next = Path.get(0);
+			BlockPos Next = Path.get(Path.size() - 1);
 			Renderer.IsRendering = true;
 			Renderer.PositionsGreen = Path;
 			if (Main.direction.equals(EnumFacing.NORTH)) {
 				if (Player.getX() - Next.getX() > 0) {
-					BestPath = "Left";
+					return "Left";
 				} else if (Player.getX() - Next.getX() < 0) {
-					BestPath = "Right";
+					return "Right";
 
 				}
 
 				if (Player.getZ() - Next.getZ() > 0) {
-					BestPath = "Forward";
+					return "Forward";
 
 				} else if (Player.getZ() - Next.getZ() < 0) {
-					BestPath = "Backwards";
+					return "Backwards";
 
 				}
 			} else if (Main.direction.equals(EnumFacing.WEST)) {
 				if (Player.getZ() - Next.getZ() > 0) {
-					BestPath = "Left";
+					return "Left";
 				} else if (Player.getZ() - Next.getZ() < 0) {
-					BestPath = "Right";
+					return "Right";
 				}
 
 				if (Player.getX() - Next.getX() > 0) {
-					BestPath = "Forward";
+					return "Forward";
 				} else if (Player.getX() - Next.getX() < 0) {
-					BestPath = "Backwards";
+					return "Backwards";
 				}
 			} else if (Main.direction.equals(EnumFacing.EAST)) {
 				if (Player.getZ() - Next.getZ() > 0) {
-					BestPath = "Left";
+					return "Left";
 				} else if (Player.getZ() - Next.getZ() < 0) {
-					BestPath = "Right";
+					return "Right";
 				}
 
 				if (Player.getX() - Next.getX() > 0) {
-					BestPath = "Backwards";
+					return "Backwards";
 				} else if (Player.getX() - Next.getX() < 0) {
-					BestPath = "Forward";
+					return "Forward";
 				}
 			} else {
 				if (Player.getX() - Next.getX() > 0) {
-					BestPath = "Left";
+					return "Left";
 				} else if (Player.getX() - Next.getX() < 0) {
-					BestPath = "Right";
+					return "Right";
 				}
 
 				if (Player.getZ() - Next.getZ() > 0) {
-					BestPath = "Backwards";
+					return "Backwards";
 				} else if (Player.getZ() - Next.getZ() < 0) {
-					BestPath = "Forward";
+					return "Forward";
 				}
 			}
 
-			return BestPath;
+			return "Calculating Path";
 		}catch (IndexOutOfBoundsException e) {
 			return "Calculating Path";
 		}
@@ -155,81 +159,32 @@ public class GetPath {
 	public static BlockPos GetGoal() {
 		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 		BlockPos Goal = null;
-		for (int i = 1; i < 170; i++) {
-			//Gets the best goal to use in the pathfinding.
-			if (Main.direction.equals(EnumFacing.NORTH)) {
-				if (i == 1) {
-					Goal = new BlockPos(Main.StartupPosX, mc.player.posY, mc.player.posZ - 200);
-				}
-				if (!IsBlockInRenderDistance(Goal)) {
-					Goal = new BlockPos(Main.StartupPosX, mc.player.posY, mc.player.posZ - (200 - i));
-				} else {
-					Goal = new BlockPos(Goal.add(0, 0, -3));
-					break;
-				}
-			} else if (Main.direction.equals(EnumFacing.WEST)) {
-				if (i == 1) {
-					Goal = new BlockPos(mc.player.posX - 200, mc.player.posY, Main.StartupPosZ);
-				}
-				if (!IsBlockInRenderDistance(Goal)) {
-					Goal = new BlockPos(mc.player.posX - (200 - i), mc.player.posY, Main.StartupPosZ);
-				} else {
-					Goal = new BlockPos(Goal.add(-3, 0, 0));
-					break;
-				}
-			} else if (Main.direction.equals(EnumFacing.EAST)) {
-				if (i == 1) {
-					Goal = new BlockPos(mc.player.posX + 200, mc.player.posY, Main.StartupPosZ);
-				}
-				if (!IsBlockInRenderDistance(Goal)) {
-					Goal = new BlockPos(mc.player.posX + (200 - i), mc.player.posY, Main.StartupPosZ);
-				} else {
-					Goal = new BlockPos(Goal.add(3, 0, 0));
-					break;
-				}
-			} else {
-				if (i == 1) {
-					Goal = new BlockPos(Main.StartupPosX, mc.player.posY, mc.player.posZ + 200);
-				}
-				if (!IsBlockInRenderDistance(Goal)) {
-					Goal = new BlockPos(Main.StartupPosX, mc.player.posY, mc.player.posZ + (200 - i));
-				} else {
-					Goal = new BlockPos(Goal.add(0, 0, 3));
-					break;
-				}
-			}
+
+		if (Main.direction.equals(EnumFacing.NORTH)) {
+			Goal = new BlockPos(Main.StartupPosX, mc.player.posY, mc.player.posZ - 200);
+		} else if (Main.direction.equals(EnumFacing.WEST)) {
+			Goal = new BlockPos(mc.player.posX - 200, mc.player.posY, Main.StartupPosZ);
+		} else if (Main.direction.equals(EnumFacing.EAST)) {
+			Goal = new BlockPos(mc.player.posX + 200, mc.player.posY, Main.StartupPosZ);
+		} else {
+			Goal = new BlockPos(Main.StartupPosX, mc.player.posY, mc.player.posZ + 200);
 		}
 		
-		if (GetPath.IsSolid(Goal)) {
-			for (int i = 0; i < 40; i++) {
-				if (GetPath.IsSolid(Goal)) {
-					if (i < 10) {
-						Goal = new BlockPos(Goal.add(i, 0, 0));
-					} else if (i < 20) {
-						Goal = new BlockPos(Goal.add(0, 0, i - 10));
-					} else if (i < 30) {
-						Goal = new BlockPos(Goal.add(0, 0, -(i - 20)));
-					} else {
-						Goal = new BlockPos(Goal.add(-(i - 30), 0, 0));
-					}
-				} else {
-					break;
-				}
-			}
-		}
+		ArrayList<BlockPos> Test = AStar.GetPath(Player, Goal, 250, true, false);
 		
-		return Goal;
+		return AStar.Closest;
 	}
 	
 	public static void ReCalculatePath(boolean Continue) {
+		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+		
 		ArrayList<BlockPos> Array = new ArrayList<BlockPos>();
 		LastCalculation = 0;
 		BlockPos Goal = GetGoal();
-		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-		Array = AStar.GetPath(Player, Goal, 300, false);
+		Array = AStar.GetPath(Player, Goal, 300, true, false);
 		if (Array.isEmpty()) {
 			BlockPos Goal2 = AStar.Closest;
-			Array = AStar.GetPath(Player, Goal2, 300, false);
+			Array = AStar.GetPath(Player, Goal2, 300, true, false);
 
 			// Activate baritone
 			if (Player.getX() == Goal2.getX()) {
@@ -253,11 +208,13 @@ public class GetPath {
 				} else {
 					Main.NoUsebaritoneMessage();
 				}
+				return;
 			}
 		}
 		
 		Path = Array;
 		Main.CantContinue = false;
+		Path.remove(0);
 	}
 	
 	public static boolean ShouldSlowDown(ArrayList<BlockPos> Path) {
@@ -293,36 +250,59 @@ public class GetPath {
 				if (Main.status.equals("Forward")) {
 					BlockPos Remove = new BlockPos(Player.add(0, 0, 1));
 					GetPath.Path.remove(Remove);
+					RemoveAll(0, 1);
 				} else {
 					BlockPos Remove = new BlockPos(Player.add(0, 0, -1));
 					GetPath.Path.remove(Remove);
+					RemoveAll(0, -1);
 				}
 			} else if (Main.direction.equals(EnumFacing.WEST)) {
 				if (Main.status.equals("Forward")) {
 					BlockPos Remove = new BlockPos(Player.add(1, 0, 0));
 					GetPath.Path.remove(Remove);
+					RemoveAll(1, 0);
 				} else {
 					BlockPos Remove = new BlockPos(Player.add(-1, 0, 0));
 					GetPath.Path.remove(Remove);
+					RemoveAll(-1, 0);
 				}
 			} else if (Main.direction.equals(EnumFacing.EAST)) {
 				if (Main.status.equals("Forward")) {
 					BlockPos Remove = new BlockPos(Player.add(-1, 0, 0));
 					GetPath.Path.remove(Remove);
+					RemoveAll(-1, 0);
 				} else {
 					BlockPos Remove = new BlockPos(Player.add(1, 0, 0));
 					GetPath.Path.remove(Remove);
+					RemoveAll(1, 0);
 				}
 			} else if (Main.direction.equals(EnumFacing.SOUTH)) {
 				if (Main.status.equals("Forward")) {
 					BlockPos Remove = new BlockPos(Player.add(0, 0, -1));
 					GetPath.Path.remove(Remove);
+					RemoveAll(0, -1);
 				} else {
 					BlockPos Remove = new BlockPos(Player.add(0, 0, 1));
 					GetPath.Path.remove(Remove);
+					RemoveAll(0, 1);
 				}
 			}
 		}
+	}
+	
+	public static boolean IsConnectedToPath(BlockPos Pos) {
+		ArrayList<BlockPos> Check = new ArrayList<BlockPos>();
+		Check.add(new BlockPos(Pos.add(1, 0, 0)));
+		Check.add(new BlockPos(Pos.add(-1, 0, 0)));
+		Check.add(new BlockPos(Pos.add(0, 0, 1)));
+		Check.add(new BlockPos(Pos.add(0, 0, -1)));
+		
+		for (int i = 0; i < Check.size(); i++) {
+			if (Path.contains(Check.get(i))) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static boolean IsBlockInRenderDistance(BlockPos Pos) {
@@ -346,6 +326,77 @@ public class GetPath {
 		X = mc.player.posX;
 		Z = mc.player.posZ;
 		return true;
+	}
+	
+	public static boolean ShouldLeaveGap() {
+		try {
+			int X = -1;
+			int Z = -1;
+			
+			for (int i = 0; i < 10; i++) {
+				X = GetPath.Path.get(0).getX();
+				Z = GetPath.Path.get(0).getZ();
+				
+				if (GetPath.Path.get(i).getX() != X) {
+					if (GetPath.Path.get(i).getZ() != Z) {
+						return false;
+					}
+				}
+			}
+			return true;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+	}
+	
+	public static boolean ShouldGoMaxSpeed() {
+		try {
+			int X = -1;
+			int Z = -1;
+			
+			for (int i = 0; i < 10; i++) {
+				X = GetPath.Path.get(0).getX();
+				Z = GetPath.Path.get(0).getZ();
+				
+				if (GetPath.Path.get(i).getX() != X) {
+					if (GetPath.Path.get(i).getZ() != Z) {
+						return false;
+					}
+				}
+			}
+			
+			if (Path.size() > 10) {
+				return true;
+			}
+			return false;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
+	}
+	
+	public static void RemoveAll(int X, int Z) {
+		if (Main.FlySpeed > 1.99) {
+			if (ShouldGoMaxSpeed()) {
+				BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+				for (int i = 0; i < 50; i++) {
+					if (X == -1) {
+						BlockPos Remove = new BlockPos(Player.add(-i, 0, 0));
+						Path.remove(Remove);
+					} else if (X == 1) {
+						BlockPos Remove = new BlockPos(Player.add(i, 0, 0));
+						Path.remove(Remove);
+					} else if (Z == -1) {
+						BlockPos Remove = new BlockPos(Player.add(0, 0, -i));
+						Path.remove(Remove);
+					} else if (Z == 1) {
+						BlockPos Remove = new BlockPos(Player.add(0, 0, i));
+						Path.remove(Remove);
+					}
+				}
+			} else {
+				Settings.FlySpeed = 1;
+			}
+		}
 	}
 	
 	public static boolean IsPathStraight() {

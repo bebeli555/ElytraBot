@@ -26,10 +26,6 @@ public class Settings {
 	public static boolean PacketFly = true;
 	public static boolean SlowGlide = false;
 	
-	public static boolean UseFireworks = false;
-	public static boolean AllowToGoDown = false;
-	public static double OpenFlySpeed = 1.5;
-	public static double OpenGlideSpeed = 0.1;
 	public static int OpenTerrainX = -1;
 	public static int OpenTerrainZ = -1;
 	public static boolean OpenLogout = false;

@@ -8,6 +8,7 @@ import me.bebeli555.ElytraBot.Settings.Settings;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.ClickType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -154,8 +155,8 @@ public class Commands {
 			Gui.TurnOn();
 			e.setCanceled(true);
 
-		} else if (e.getMessage().equalsIgnoreCase("++Help")) {			
-			String message = ChatFormatting.GREEN + "Elytra Highway bot " + ChatFormatting.RED + "V2.0"
+		} else if (e.getMessage().equalsIgnoreCase("++Help")) {				
+			String message = ChatFormatting.GREEN + "Elytra Highway bot " + ChatFormatting.RED + "V2.1"
 					+ ChatFormatting.GREEN + " Made by:" + ChatFormatting.RED + " bebeli555";
 			mc.player.sendMessage(new TextComponentString(message));
 			this.bebeli("");

@@ -26,9 +26,9 @@ public class ElytraFly {
 			}
 		}
 		
-		if (me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
-			if (me.bebeli555.ElytraBot.Overworld.Main.MoveOn == true) {
-				me.bebeli555.ElytraBot.Overworld.Main.Flight((Settings.FlySpeed) - FlyMinus, me.bebeli555.ElytraBot.Overworld.Main.MoveRight, me.bebeli555.ElytraBot.Overworld.Main.MoveStraight, -(Settings.GlideSpeed / 10000f));
+		if (me.bebeli555.ElytraBot.OpenTerrain.Main.toggle == true) {
+			if (me.bebeli555.ElytraBot.OpenTerrain.Main.MoveOn == true) {
+				me.bebeli555.ElytraBot.OpenTerrain.Main.Flight((Settings.FlySpeed) - FlyMinus, -(Settings.GlideSpeed / 10000f), me.bebeli555.ElytraBot.OpenTerrain.Main.MoveDirection);
 			}
 		}
 	}
@@ -42,7 +42,7 @@ public class ElytraFly {
 			return true;
 		}
 		
-		if (me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
+		if (me.bebeli555.ElytraBot.OpenTerrain.Main.toggle == true) {
 			return true;
 		}
 		

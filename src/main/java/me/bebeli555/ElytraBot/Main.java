@@ -15,6 +15,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import me.bebeli555.ElytraBot.PathFinding.Center;
 import me.bebeli555.ElytraBot.PathFinding.GetPath;
 import me.bebeli555.ElytraBot.Settings.Settings;
+import me.bebeli555.ElytraBot.Settings.StopAt;
+
+import java.awt.TrayIcon.MessageType;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 import baritone.api.BaritoneAPI;
 
@@ -56,14 +60,14 @@ public class Main {
 	public static boolean manuverRight = false;
 	public static double ManuverSpeed;
 	
-	// Elytra Highway Bot V1.9
+	// Elytra Highway Bot V2.1
 	// Made by: bebeli555
-	
+
 	@SubscribeEvent
 	public void ServerLeave (PlayerLoggedOutEvent e) {
 		Gui.TurnOff();
 	}
-
+	
 	@SubscribeEvent
 	public void onUpdate(TickEvent.ClientTickEvent e) {
 		try {
@@ -75,7 +79,7 @@ public class Main {
 
 			if (toggle == true) {
 				MoveOn = false;
-
+				
 				if (takeoff == false) {
 					status = "Attempting to TakeOff";
 
@@ -207,6 +211,13 @@ public class Main {
 				} else {
 					delay18 = 0;
 
+					BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+					if (!GetPath.IsBlockInRenderDistance(Player)) {
+						SetMotion(0, -(Settings.GlideSpeed / 10000f), 0);
+						status = "Waiting Chunks to load";
+						return;
+					}
+					
 					// Y Center go up
 					if (Center.IsYCentered() == false && mc.player.isElytraFlying() && TakeOff.IsClearToCenter()) {
 						delay5++;
@@ -282,26 +293,22 @@ public class Main {
 							Main.ManuverSpeed = 0.1;
 							if (Center.IsCentered(Main.z)) {
 								Main.setMove(0, false, true, 0);
-								IsStuck(message);
 							}
 						} else if (message.contains("Backwards")) {
 							Main.ManuverSpeed = 0.1;
 							if (Center.IsCentered(Main.z)) {
 								ElytraFly.FlyMinus = Settings.FlySpeed * 2;
 								Main.setMove(0, false, true, 0);
-								IsStuck(message);
 							}
 						} else if (message.contains("Right")) {
 							Main.ManuverSpeed = 1;
 							Main.setMove(0, true, false, 0);
-							IsStuck(message);
 						} else if (message.contains("Left")) {
 							Main.ManuverSpeed = 1;
 							Main.setMove(0, false, false, 0);
-							IsStuck(message);
 						}
 					}
-
+					
 					// Slow down
 					if (GetPath.ShouldSlowDown(GetPath.Path)) {
 						Settings.FlySpeed = 1;
@@ -331,15 +338,11 @@ public class Main {
 					} else {
 						status = message;
 					}
-
-					if (message.equals("Backwards")) {
-						Settings.FlySpeed = 1;
-					}
 				}
 			}
 		} catch (Exception e22) {
 			System.out.println("Exception in main class ElytraBot");
-			System.out.println(e22.getLocalizedMessage());
+			e22.printStackTrace();
 		}
 	}
 		
@@ -627,25 +630,5 @@ public class Main {
 		setMove(0, false, true, 0);
 		status = "Going Straight";
 		ElytraFly.FlyMinus = 0;
-	}
-	
-	//Fixes 1 issue with 2bs anticheat
-	public static void IsStuck(String message) {
-		if (check == true) {
-			if (message.contains("Right") || message.contains("Left")) {
-				if (LastZ == (int)mc.player.posZ) {
-					if (LastX == (int)mc.player.posX) {
-						StayStill = true;
-					}
-				}
-				
-				LastZ = (int)mc.player.posZ;
-				LastX = (int)mc.player.posX;
-				check = false;
-			}
-		}
-		if (message.contains("Forward") || message.contains("Backwards")) {
-			check = true;
-		}
 	}
  }

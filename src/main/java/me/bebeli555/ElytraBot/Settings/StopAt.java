@@ -2,6 +2,13 @@ package me.bebeli555.ElytraBot.Settings;
 
 import me.bebeli555.ElytraBot.Commands;
 import me.bebeli555.ElytraBot.Gui;
+
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.SoundEvents;
@@ -68,6 +75,23 @@ public class StopAt {
 		if (me.bebeli555.ElytraBot.Commands.Log == true) {
 			mc.world.sendQuittingDisconnectingPacket();
 		}
-		 
+		
+		SendAlert("We reached the destination.", MessageType.INFO);
+	}
+	
+	//Send windows alert for stuff
+	public static void SendAlert(String message, MessageType type) {
+		try{
+		    SystemTray tray = SystemTray.getSystemTray();
+		    Image image = Toolkit.getDefaultToolkit().createImage("Elytrabot.png");
+		    TrayIcon trayIcon = new TrayIcon(image, "ElytraBot");
+		    trayIcon.setImageAutoSize(true);
+		    trayIcon.setToolTip("ElytraBot");
+		    tray.add(trayIcon);
+		    trayIcon.displayMessage("ElytraBot", message, type);
+		}catch(Exception e){
+			System.out.println("Elytrabot: Exception trying to send an alert.");
+			System.out.println(e.getCause());
+		}
 	}
 }

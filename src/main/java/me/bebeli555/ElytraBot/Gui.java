@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import me.bebeli555.ElytraBot.OpenTerrain.GetGoal;
 import me.bebeli555.ElytraBot.PathFinding.GetPath;
 import me.bebeli555.ElytraBot.Settings.AutoRepair;
 import me.bebeli555.ElytraBot.Settings.KeyBind;
@@ -59,6 +60,8 @@ public class Gui extends GuiScreen {
 	static boolean DiagonalExtended = false;
 	static boolean AutoRepairExtended = false;
 	static boolean AutoEatExtended = false;
+	static int OldScale = 0;
+	static boolean ChangeToOld = false;
 
 	static boolean Highway = false;
 	static boolean OpenTerrain = false;
@@ -136,7 +139,7 @@ public class Gui extends GuiScreen {
 			mc.fontRenderer.drawStringWithShadow("So there will be less obstacles on ur way", 194, 140, 0xffff);
 		}
 
-		mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "ElytraHighwayBot " + ChatFormatting.GREEN + "V2.0", 1, 1, 0xb8352c);
+		mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "ElytraHighwayBot " + ChatFormatting.GREEN + "V2.1", 1, 1, 0xb8352c);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Made By: " + ChatFormatting.GREEN + "bebeli555", 1, 10, 0xb8352c);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Discord: " + ChatFormatting.GREEN + "https://discord.gg/QTPWRrV", 1, 20, 0xb8352c);
 
@@ -155,35 +158,38 @@ public class Gui extends GuiScreen {
 
 		// Open terrain
 		drawRect(430 + ModeX, 190 + ModeY, 540 + ModeX, 210 + ModeY, 0x36393fff);
+		
 		if (OpenTerrain == true) {
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Overworld", 458 + ModeX, 195 + ModeY, 0xffff);
+			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Overworld", 460 + ModeX, 195 + ModeY, 0xffff);
 		} else {
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Overworld", 458 + ModeX, 195 + ModeY, 0xffff);
+			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Overworld", 460 + ModeX, 195 + ModeY, 0xffff);
 		}
-
+		
 		if (Highway == false && OpenTerrain == false) {
+			Snake.DrawSnake();
 			SoundGUI.drawSoundGUI();
 			ModeX = 0;
 			ModeY = 0;
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GOLD + "-->", 405, 185, 0xffff);
-			mc.fontRenderer.drawStringWithShadow("Please select a Mode!", 290, 185, 0xffff);
+			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GOLD + "<--", 550, 185, 0xffff);
+			mc.fontRenderer.drawStringWithShadow("Please select", 570, 185, 0xffff);
+			mc.fontRenderer.drawStringWithShadow("A Mode", 585, 195, 0xffff);
 			// Info about the Modes
-			int InfoX = 25;
+			int InfoX = 95;
 			String HighwayMode = ChatFormatting.BOLD + "Highway MODE";
 			String OpenTerrainMode = ChatFormatting.BOLD + "Overworld MODE";
 			mc.fontRenderer.drawStringWithShadow(ChatFormatting.LIGHT_PURPLE + HighwayMode, 640 + InfoX, 120, 0xffff);
-			mc.fontRenderer.drawStringWithShadow("A Mode designed for the Highways", 598 + InfoX, 130, 0xffff);
-			mc.fontRenderer.drawStringWithShadow("Just look at the direction you want to go", 585 + InfoX, 140, 0xffff);
+			mc.fontRenderer.drawStringWithShadow("A Mode designed for the Highways", 596 + InfoX, 130, 0xffff);
+			mc.fontRenderer.drawStringWithShadow("Just look at the direction you want to go", 583 + InfoX, 140, 0xffff);
 			mc.fontRenderer.drawStringWithShadow("And start it. Also has alot of Settings!", 588 + InfoX, 150, 0xffff);
 
 			mc.fontRenderer.drawStringWithShadow(ChatFormatting.LIGHT_PURPLE + OpenTerrainMode, 628 + InfoX, 170, 0xffff);
 			mc.fontRenderer.drawStringWithShadow("A Mode designed for Overworld travel", 583 + InfoX, 180, 0xffff);
-			mc.fontRenderer.drawStringWithShadow("It will take you to set coordinates.", 587 + InfoX, 190, 0xffff);
+			mc.fontRenderer.drawStringWithShadow("It will take you to set coordinates.", 592 + InfoX, 190, 0xffff);
 		}
 
 		if (Highway == true || OpenTerrain == true) {
 			drawRect(430, 70, 540, 90, 0x36393fff);
-			if (me.bebeli555.ElytraBot.Main.toggle == true | me.bebeli555.ElytraBot.Settings.Diagonal.toggle == true | me.bebeli555.ElytraBot.Main.baritonetoggle == true | me.bebeli555.ElytraBot.Settings.Diagonal.baritonetoggle == true | me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
+			if (me.bebeli555.ElytraBot.Main.toggle == true | me.bebeli555.ElytraBot.Settings.Diagonal.toggle == true | me.bebeli555.ElytraBot.Main.baritonetoggle == true | me.bebeli555.ElytraBot.Settings.Diagonal.baritonetoggle == true | me.bebeli555.ElytraBot.OpenTerrain.Main.toggle == true) {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + Stop, 468, 75, 0xffff);
 				on = true;
 			} else {
@@ -459,6 +465,13 @@ public class Gui extends GuiScreen {
 		if (me.bebeli555.ElytraBot.Commands.GuiON == true) {
 			delay++;
 			if (delay > 1) {
+				ChangeToOld = true;
+				//Change scale to normal for moment
+				OldScale = mc.gameSettings.guiScale;
+				if (mc.gameSettings.guiScale != 2) {
+					mc.gameSettings.guiScale = 2;
+				}
+				
 				me.bebeli555.ElytraBot.Commands.GuiON = false;
 				delay = 0;
 				Minecraft.getMinecraft().displayGuiScreen(new Gui());
@@ -467,6 +480,11 @@ public class Gui extends GuiScreen {
 
 		// Stop listening to keys when gui is closed
 		if (mc.currentScreen == null) {
+			if (ChangeToOld == true) {
+				ChangeToOld = false;
+				mc.gameSettings.guiScale = OldScale;
+			}
+			
 			StopX = false;
 			StopZ = false;
 			StopSpeed = false;
@@ -499,8 +517,9 @@ public class Gui extends GuiScreen {
 			
 			if (Highway == false && OpenTerrain == false) {
 				SoundGUI.ClickEvent(i, j, k);
+				Snake.OnClick(i, j, k);
 			}
-
+			
 			if (Highway == true || OpenTerrain == true) {
 				// Start and Stop 430, 70, 540, 90
 				if (430 < i && 540 > i && 70 < j && 90 > j) {
@@ -764,6 +783,7 @@ public class Gui extends GuiScreen {
 	@SubscribeEvent
 	public void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Post e) {
 		try {
+			Snake.OnClick(e);
 			if (!Keyboard.isKeyDown(28)) {
 				if (Keyboard.isKeyDown(14)) {
 					ResetTyping();
@@ -867,14 +887,19 @@ public class Gui extends GuiScreen {
 	public static void TurnOff() {
 		try {
 			GetPath.Path.clear();
+			me.bebeli555.ElytraBot.OpenTerrain.GetPath.Path.clear();
+			Renderer.PositionsYellow.clear();
+			Renderer.PositionsRed.clear();
+			Renderer.PositionsGreen.clear();
 		} catch (Exception e) {
-
+			
 		}
 		if (Main.FlySpeed != 0) {
 			Settings.FlySpeed = Main.FlySpeed;
 		}
-		me.bebeli555.ElytraBot.Overworld.Main.toggle = false;
-		me.bebeli555.ElytraBot.Overworld.Main.TurnOff();
+		me.bebeli555.ElytraBot.OpenTerrain.GetGoal.NoPath = false;
+		me.bebeli555.ElytraBot.OpenTerrain.Main.toggle = false;
+		me.bebeli555.ElytraBot.OpenTerrain.Main.TurnOff();
 		TakeOff.ActivatePacketFly = false;
 		Main.delay5 = 0;
 		me.bebeli555.ElytraBot.ElytraFly.YCenter = false;
@@ -906,10 +931,10 @@ public class Gui extends GuiScreen {
 				me.bebeli555.ElytraBot.Main.Check();
 			}
 		} else if (OpenTerrain == true) {
-			me.bebeli555.ElytraBot.Overworld.Main.Check();
-			if ((int)mc.player.posY < 250) {
-				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "You should use this ABOVE the build limit so theres no obstacles!"));
+			if (Main.FlySpeed > 2) {
+				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "The speed you are using is too high the Maximum speed for this mode to work is 2"));
 			}
+			me.bebeli555.ElytraBot.OpenTerrain.Main.Check();
 		} else {
 			mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "No mode selected. Setting to Highway as default."));
 			if (me.bebeli555.ElytraBot.Settings.Settings.Diagonal == true) {

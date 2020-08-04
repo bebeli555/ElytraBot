@@ -84,6 +84,10 @@ public class SoundGUI extends GuiScreen{
 			}
 		}
 		
+		if (!IsExtended) {
+			return;
+		}
+		
 		//Chirp 10, 60, 120, 80
 		if (10 < i && 120 > i && 60 < j && 80 > j) {
 			if (Chirp == true) {
@@ -92,7 +96,7 @@ public class SoundGUI extends GuiScreen{
 				mc.getSoundHandler().stopSounds();
 			} else {
 				Chirp = true;
-				mc.world.playSound(Player, SoundEvents.RECORD_CHIRP, SoundCategory.AMBIENT, 102.5f, PlaySpeed, true);
+				mc.world.playSound(Player, SoundEvents.RECORD_CHIRP, SoundCategory.AMBIENT, 10222.5f, PlaySpeed, true);
 			}
 		}
 		
@@ -104,7 +108,7 @@ public class SoundGUI extends GuiScreen{
 				mc.getSoundHandler().stopSounds();
 			} else {
 				Far = true;
-				mc.world.playSound(Player, SoundEvents.RECORD_FAR, SoundCategory.AMBIENT, 102.5f, PlaySpeed, true);
+				mc.world.playSound(Player, SoundEvents.RECORD_FAR, SoundCategory.AMBIENT, 10222.5f, PlaySpeed, true);
 			}
 		}
 		
@@ -116,7 +120,7 @@ public class SoundGUI extends GuiScreen{
 				mc.getSoundHandler().stopSounds();
 			} else {
 				Stal = true;
-				mc.world.playSound(Player, SoundEvents.RECORD_STAL, SoundCategory.AMBIENT, 102.5f, PlaySpeed, true);
+				mc.world.playSound(Player, SoundEvents.RECORD_STAL, SoundCategory.AMBIENT, 10222.5f, PlaySpeed, true);
 			}
 		}
 		
@@ -128,7 +132,7 @@ public class SoundGUI extends GuiScreen{
 				mc.getSoundHandler().stopSounds();
 			} else {
 				Strad = true;
-				mc.world.playSound(Player, SoundEvents.RECORD_STRAD, SoundCategory.AMBIENT, 102.5f, PlaySpeed, true);
+				mc.world.playSound(Player, SoundEvents.RECORD_STRAD, SoundCategory.AMBIENT, 10222.5f, PlaySpeed, true);
 			}
 		}
 		
