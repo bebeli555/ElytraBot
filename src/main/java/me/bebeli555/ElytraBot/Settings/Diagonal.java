@@ -1,20 +1,13 @@
 package me.bebeli555.ElytraBot.Settings;
 
-import java.util.Objects;
-import java.util.Random;
-
-import me.bebeli555.ElytraBot.Main;
-import me.bebeli555.ElytraBot.TakeOff;
+import me.bebeli555.ElytraBot.Highway.Main;
+import me.bebeli555.ElytraBot.Highway.TakeOff;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -45,7 +38,6 @@ public class Diagonal {
 	public static boolean idkshit = false;
 
 	
-	// Main Method!
 	@SubscribeEvent
 	public void onUpdate(TickEvent.ClientTickEvent e) {
 			try {
@@ -86,7 +78,7 @@ public class Diagonal {
 				
 				// Activate baritone support if player is stuck
 				if (status == "Going Straight") {
-					if (me.bebeli555.ElytraBot.Settings.Settings.UseBaritone == true) {
+					if (Settings.getBoolean("UseBaritone")) {
 						delay21++;
 						if (delay21 == 2) {
 							barposx = (int) mc.player.posX;
@@ -111,7 +103,7 @@ public class Diagonal {
 					status = "Attempting to TakeOff";
 					delay18++;
 					if (delay18 > 400) {
-						if (me.bebeli555.ElytraBot.Settings.Settings.UseBaritone == true) {
+						if (Settings.getBoolean("UseBaritone")) {
 							baritonetoggle = true;
 							lmao5 = false;
 							toggle = false;
@@ -125,7 +117,7 @@ public class Diagonal {
 						BlockPos Check = playerPos.add(0, 2, 0);
 						
 						if (mc.world.getBlockState(Check).getBlock() == Blocks.BEDROCK) {
-							if (me.bebeli555.ElytraBot.Settings.Settings.UseBaritone == true) {
+							if (Settings.getBoolean("UseBaritone")) {
 								baritonetoggle = true;
 								lmao5 = false;
 								toggle = false;
@@ -137,7 +129,7 @@ public class Diagonal {
 						}
 					}
 					
-					TakeOff.TakeOffMethod(true, Settings.PacketFly, Settings.SlowGlide);
+					TakeOff.TakeOffMethod(true, Settings.getBoolean("PacketFly"), Settings.getBoolean("SlowGlide"));
 					// End Of TakeOff
 				} else {
 					//Prevent pitch going too up or too low or 2bs anticheat will start rubberbanding you
@@ -202,7 +194,7 @@ public class Diagonal {
 	public static void Flight(boolean right, boolean straight, double y) {
 		if (mc.player.isElytraFlying()) {
 			if (straight == true) {
-				double Speed = Settings.FlySpeed / 1.408;
+				double Speed = Settings.getDouble("Speed") / 1.408;
 				
 				if (facing.equals("--")) {
 					Main.SetMotion(-Speed, y, -Speed);
@@ -280,14 +272,15 @@ public class Diagonal {
 	public void UseBaritone() {
 		SetYaws();
 		int GoY = StartupPosY - (int)mc.player.posY;
+		int blocks = (int)Settings.getDouble("usebaritoneBlocks");
 		if (facing.equals("--")) {
-			mc.player.sendChatMessage("#goto ~-" + Settings.UseBaritoneBlocks + " ~" + GoY + " ~-" + Settings.UseBaritoneBlocks);
+			mc.player.sendChatMessage("#goto ~-" + blocks + " ~" + GoY + " ~-" + blocks);
 		} else if (facing.equals("++")) {
-			mc.player.sendChatMessage("#goto ~+" + Settings.UseBaritoneBlocks + " ~" + GoY + " ~+" + Settings.UseBaritoneBlocks);
+			mc.player.sendChatMessage("#goto ~+" + blocks + " ~" + GoY + " ~+" + blocks);
 		} else if (facing.equals("+-")) {
-			mc.player.sendChatMessage("#goto ~+" + Settings.UseBaritoneBlocks + " ~" + GoY + " ~-" + Settings.UseBaritoneBlocks);
+			mc.player.sendChatMessage("#goto ~+" + blocks + " ~" + GoY + " ~-" + blocks);
 		} else if (facing.equals("-+")) {
-			mc.player.sendChatMessage("#goto ~-" + Settings.UseBaritoneBlocks + " ~" + GoY + " ~+" + Settings.UseBaritoneBlocks);
+			mc.player.sendChatMessage("#goto ~-" + blocks + " ~" + GoY + " ~+" + blocks);
 		}
 	}
 }

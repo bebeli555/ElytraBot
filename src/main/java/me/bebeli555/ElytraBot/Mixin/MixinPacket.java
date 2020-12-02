@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import me.bebeli555.ElytraBot.TakeOff;
+import me.bebeli555.ElytraBot.Highway.TakeOff;
 
 import org.spongepowered.asm.mixin.injection.At;
 

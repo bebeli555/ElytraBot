@@ -1,24 +1,16 @@
 package me.bebeli555.ElytraBot.Settings;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-import me.bebeli555.ElytraBot.Main;
-import me.bebeli555.ElytraBot.PathFinding.GetPath;
 import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.client.event.ClientChatEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
@@ -51,17 +43,13 @@ public class AutoRepair {
 	@SubscribeEvent
 	public void onUpdate(ClientTickEvent e) {
 		//Activate if elytra has low durability
-		if (AutoEat.IsElytrabotEnabled()) {
-			if (Settings.AutoRepair == true) {
-				if (HasXP()) {
-					ActivateIfLowDur();
-				}
-			}
+		if (AutoEat.IsElytrabotEnabled() && Settings.getBoolean("AutoRepair") == true && HasItem(Items.EXPERIENCE_BOTTLE)) {
+			ActivateIfLowDur();
 		}
 		
 		if (AutoRepair == true) {	
-			me.bebeli555.ElytraBot.Main.toggle = false;
-			me.bebeli555.ElytraBot.Main.baritonetoggle = false;
+			me.bebeli555.ElytraBot.Highway.Main.toggle = false;
+			me.bebeli555.ElytraBot.Highway.Main.baritonetoggle = false;
 			me.bebeli555.ElytraBot.Settings.Diagonal.toggle = false;
 			me.bebeli555.ElytraBot.Settings.Diagonal.baritonetoggle = false;
 			checkstuff = false;
@@ -99,7 +87,7 @@ public class AutoRepair {
 				}
 				
 				//Drop some stuff so it can take the armor off
-				if (Settings.DropItems) {
+				if (Settings.getBoolean("DropItems")) {
 					if (TakeOff2 == false) {
 						if (HasArmor() && PlaceBack == false) {
 							if (HasSpace()) {
@@ -147,8 +135,8 @@ public class AutoRepair {
 						if (HasArmor() == false) {
 							PlaceBack = true;
 						} else {
-							if (me.bebeli555.ElytraBot.Settings.Settings.Diagonal == false) {
-								me.bebeli555.ElytraBot.Main.toggle = true;
+							if (Settings.getBoolean("Diagonal") == false) {
+								me.bebeli555.ElytraBot.Highway.Main.toggle = true;
 							} else {
 								me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;
 							}
@@ -185,11 +173,11 @@ public class AutoRepair {
 		return 0;
 	}
 	
-	public static boolean HasXP() {
-		for (int i = 9; i < 44; ++i) {
+	public static boolean HasItem(Item item) {
+		for (int i = 0; i < 44; ++i) {
 			try {
 				final ItemStack stack2 = mc.player.inventory.getStackInSlot(i);
-				if (stack2.getItem() == Items.EXPERIENCE_BOTTLE) {
+				if (stack2.getItem() == item) {
 					return true;
 				}
 			}catch (NullPointerException e) {
@@ -203,12 +191,12 @@ public class AutoRepair {
 		ItemStack elytra = mc.player.inventory.armorItemInSlot(2);
 		int Durability = (elytra.getMaxDamage() - elytra.getItemDamage());
 
-		if (Durability > 400) {
+		if (Durability > 400 && Durability > Settings.getDouble("Durability")) {
 			if (HasArmor() == false) {
 				PlaceBack = true;
 			} else {
-				if (me.bebeli555.ElytraBot.Settings.Settings.Diagonal == false) {
-					me.bebeli555.ElytraBot.Main.toggle = true;
+				if (Settings.getBoolean("Diagonal") == false) {
+					me.bebeli555.ElytraBot.Highway.Main.toggle = true;
 				} else {
 					me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;
 				}
@@ -260,18 +248,18 @@ public class AutoRepair {
 		if (delay11 == 5) {
 			//Helmet
 			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, HelmetSlot, 0, ClickType.PICKUP, mc.player);
-			Helmet = GetEmpty();
-			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, GetEmpty(), 0, ClickType.PICKUP, mc.player);
+			Helmet = GetItem(Items.AIR);
+			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, GetItem(Items.AIR), 0, ClickType.PICKUP, mc.player);
 		} else if (delay11 == 25) {
 			//Leggings
 			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, LeggingsSlot, 0, ClickType.PICKUP, mc.player);
-			Leggings = GetEmpty();
-			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, GetEmpty(), 0, ClickType.PICKUP, mc.player);
+			Leggings = GetItem(Items.AIR);
+			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, GetItem(Items.AIR), 0, ClickType.PICKUP, mc.player);
 		} else if (delay11 > 50) {
 			//Boots
 			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, BootsSlot, 0, ClickType.PICKUP, mc.player);
-			Boots = GetEmpty();
-			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, GetEmpty(), 0, ClickType.PICKUP, mc.player);
+			Boots = GetItem(Items.AIR);
+			mc.playerController.windowClick(mc.player.inventoryContainer.windowId, GetItem(Items.AIR), 0, ClickType.PICKUP, mc.player);
 			
 			TakeOff2 = false;
 			delay11 = 0;
@@ -295,8 +283,8 @@ public class AutoRepair {
 		} else if (delay12 > 120) {	
 			PlaceBack = false;
 			delay12 = 0;
-			if (me.bebeli555.ElytraBot.Settings.Settings.Diagonal == false) {
-				me.bebeli555.ElytraBot.Main.toggle = true;
+			if (Settings.getBoolean("Diagonal") == false) {
+				me.bebeli555.ElytraBot.Highway.Main.toggle = true;
 			} else {
 				me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;
 			}
@@ -308,11 +296,10 @@ public class AutoRepair {
 		}
 	}
 	
-	public static int GetEmpty() {
+	public static int GetItem(Item item) {
 		for (int i = 9; i < 44; ++i) { 
 			final ItemStack stack2 = mc.player.inventory.getStackInSlot(i);
-			if (stack2.getItem() == Items.AIR) {
-				System.out.println(i);
+			if (stack2.getItem() == item) {
 				return i;
 			}
 		}
@@ -331,8 +318,8 @@ public class AutoRepair {
 						if (HasArmor() == false) {
 							PlaceBack = true;
 						} else {
-							if (me.bebeli555.ElytraBot.Settings.Settings.Diagonal == false) {
-								me.bebeli555.ElytraBot.Main.toggle = true;
+							if (Settings.getBoolean("Diagonal") == false) {
+								me.bebeli555.ElytraBot.Highway.Main.toggle = true;
 							} else {
 								me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;
 							}
@@ -352,7 +339,7 @@ public class AutoRepair {
 		ItemStack elytra = mc.player.inventory.armorItemInSlot(2);
 		int Durability = (elytra.getMaxDamage()-elytra.getItemDamage());
 		
-		if (Durability < 50) {
+		if (Durability < Settings.getDouble("Durability")) {
 			me.bebeli555.ElytraBot.Settings.AutoRepair.AutoRepair = true;
 		}
 	}

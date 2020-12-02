@@ -1,5 +1,6 @@
 package me.bebeli555.ElytraBot;
 
+import me.bebeli555.ElytraBot.Highway.Main;
 import me.bebeli555.ElytraBot.Settings.Diagonal;
 import me.bebeli555.ElytraBot.Settings.Settings;
 
@@ -14,21 +15,24 @@ public class ElytraFly {
 	
 	//This controls the elytraflight.
 	public static void ElytraFlight() {
+		double flySpeed = Settings.getDouble("Speed");
+		double glideSpeed = Settings.getDouble("GlideSpeed");
+		
 		if (Main.toggle == true) {
 			if (Main.MoveOn == true) {
-				Main.Flight((Settings.FlySpeed) - FlyMinus, Main.MoveRight, Main.MoveStraight, -(Settings.GlideSpeed / 10000f));
+				Main.Flight((flySpeed) - FlyMinus, Main.MoveRight, Main.MoveStraight, -(glideSpeed / 10000f));
 			}
 		}
 		
 		if (Diagonal.toggle == true) {
 			if (Diagonal.MoveOn == true) {
-				Diagonal.Flight(Diagonal.MoveRight, Diagonal.MoveStraight, -(Settings.GlideSpeed / 10000f));
+				Diagonal.Flight(Diagonal.MoveRight, Diagonal.MoveStraight, -(glideSpeed / 10000f));
 			}
 		}
 		
-		if (me.bebeli555.ElytraBot.OpenTerrain.Main.toggle == true) {
-			if (me.bebeli555.ElytraBot.OpenTerrain.Main.MoveOn == true) {
-				me.bebeli555.ElytraBot.OpenTerrain.Main.Flight((Settings.FlySpeed) - FlyMinus, -(Settings.GlideSpeed / 10000f), me.bebeli555.ElytraBot.OpenTerrain.Main.MoveDirection);
+		if (me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
+			if (me.bebeli555.ElytraBot.Overworld.Main.MoveOn == true) {
+				me.bebeli555.ElytraBot.Overworld.Main.Flight((flySpeed) - FlyMinus, -(glideSpeed / 10000f), me.bebeli555.ElytraBot.Overworld.Main.MoveDirection);
 			}
 		}
 	}
@@ -42,7 +46,7 @@ public class ElytraFly {
 			return true;
 		}
 		
-		if (me.bebeli555.ElytraBot.OpenTerrain.Main.toggle == true) {
+		if (me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
 			return true;
 		}
 		

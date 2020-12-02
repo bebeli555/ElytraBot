@@ -2,9 +2,12 @@ package me.bebeli555.ElytraBot;
 
 import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
-import me.bebeli555.ElytraBot.OpenTerrain.Main;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
+import me.bebeli555.ElytraBot.Overworld.Main;
+import me.bebeli555.ElytraBot.Settings.Settings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,25 +17,26 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import static org.lwjgl.opengl.GL11.*;
 
-public class Renderer {
+public class Renderer extends GuiScreen {
 	static Minecraft mc = Minecraft.getMinecraft();
+	public static String elytrabotStatus;
 	public static boolean IsRendering = false;
-	public static BlockPos GreenPos = new BlockPos(2, 5000 ,2);
-	public static BlockPos RedPos = new BlockPos(2, 5000 ,2);
-	public static BlockPos YellowPos = new BlockPos(2, 5000 ,2);
 	
 	public static ArrayList<BlockPos> PositionsGreen = new ArrayList<BlockPos>();
 	public static ArrayList<BlockPos> PositionsRed = new ArrayList<BlockPos>();
 	public static ArrayList<BlockPos> PositionsYellow = new ArrayList<BlockPos>();
+	
+	static int delay = 0;
+	static int EstimatedHours, EstimatedMinutes, EstimatedSeconds, BlocksASec;
+	static BlockPos Latest;
 
 	//This renders the Status above your hotbar
 	@SubscribeEvent
 	public void render(RenderGameOverlayEvent.Text e) {
-		if (me.bebeli555.ElytraBot.Main.toggle == true) {
-			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + me.bebeli555.ElytraBot.Main.status, 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.Main.baritonetoggle == true) {
+		if (me.bebeli555.ElytraBot.Highway.Main.toggle == true) {
+			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + me.bebeli555.ElytraBot.Highway.Main.status, 390, 475, 0xffff);
+		} else if (me.bebeli555.ElytraBot.Highway.Main.baritonetoggle == true) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + "Using baritone to overcome obstacle", 390, 475, 0xffff);
 		} else if (me.bebeli555.ElytraBot.Settings.AutoRepair.AutoRepair == true) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + "Repairing Elytra", 390, 475, 0xffff);
@@ -40,7 +44,7 @@ public class Renderer {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + me.bebeli555.ElytraBot.Settings.Diagonal.status, 390, 475, 0xffff);
 		} else if (me.bebeli555.ElytraBot.Settings.Diagonal.baritonetoggle == true) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + "Using baritone to overcome obstacle", 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.OpenTerrain.Main.toggle == true) {
+		} else if (me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
 			String Seconds = ChatFormatting.GOLD + " Seconds: ";
 			String Minutes = ChatFormatting.GOLD + " Minutes: ";
 			String Hours = ChatFormatting.GOLD + "Hours: ";
@@ -48,6 +52,52 @@ public class Renderer {
 			String ok2 = "" + Main.EstimatedMinutes; String EstimatedMin = ChatFormatting.GREEN + ok2;
 			String ok3 = "" + Main.EstimatedHours; String EstimatedHour = ChatFormatting.GREEN + ok3;
 			mc.fontRenderer.drawString(ChatFormatting.RED + "Estimated Time " + Hours + EstimatedHour + Minutes + EstimatedMin + Seconds + EstimatedSec, 370, 475, 0xffff);
+		}
+	}
+	
+	public static void EstimatedTime() {
+		//Get Blocks a second player is travelling
+		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
+		delay++;
+		if (delay > 19) {
+			delay = 0;
+			if (Latest == null) {
+				Latest = Player;
+				return;
+			}
+			int X = Player.getX() - Latest.getX();
+			int Z = Player.getZ() - Latest.getZ();
+			BlocksASec = Math.abs(X) + Math.abs(Z);
+			Latest = Player;
+		}
+		
+		//Set time
+		if (BlocksASec != 0) {
+			int X = 0;
+			int Z = 0;
+			if (me.bebeli555.ElytraBot.Overworld.Main.toggle) {
+				X = (int) ((int) mc.player.posX - Settings.getDouble("OverworldX"));
+				Z = (int) ((int) mc.player.posZ - Settings.getDouble("OverworldZ"));
+			} else {
+				if (Settings.getDouble("StopAtX") < Settings.getDouble("StopAtZ")) {
+					
+				} else {
+					
+				}
+			}
+			int Blocks = Math.abs(X) + Math.abs(Z);
+			Blocks = Math.abs(Blocks);
+
+			int seconds = 0;
+			seconds = (Blocks / BlocksASec) / 2;
+			int p1 = seconds % 60;
+			int p2 = seconds / 60;
+			int p3 = p2 % 60;
+			p2 = p2 / 60;
+
+			EstimatedHours = p2;
+			EstimatedMinutes = p3;
+			EstimatedSeconds = p1;
 		}
 	}
 	
@@ -168,19 +218,5 @@ public class Renderer {
 				BlockPos4.getY() - mc.getRenderManager().viewerPosY,
 				BlockPos4.getZ() + 1 - mc.getRenderManager().viewerPosZ);
 		return Axis;
-    }
-    public static void DrawGreenBox(BlockPos BlockPos) {
-        IsRendering = true;
-        GreenPos = BlockPos;
-    }
-    
-    public static void DrawRedBox(BlockPos BlockPos) {
-        IsRendering = true;
-        RedPos = BlockPos;
-    }
-    
-    public static void DrawYellowBox(BlockPos BlockPos) {
-        IsRendering = true;
-        YellowPos = BlockPos;
     }
 }

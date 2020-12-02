@@ -13,12 +13,14 @@ buildscript {
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.3'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'com.github.johnrengelman.shadow'
 
-version = "2.1"
+version = "2.2"
 group = "me.bebeli555.ElytraBot"
 archivesBaseName = "ElytraBot"
 
@@ -91,4 +93,20 @@ jar {
 mixin {
 	defaultObfuscationEnv searge
     add sourceSets.main, "mixins.elytrabot.refmap.json"
+}
+
+shadowJar {
+    dependencies {
+        include(dependency('cabaletta:baritone-api'))
+        include(dependency('org.spongepowered:mixin'))
+    }
+
+    classifier = 'release'
+}
+
+reobf {
+    shadowJar {
+        mappingType = 'SEARGE'
+        classpath = sourceSets.main.compileClasspath
+    }
 }

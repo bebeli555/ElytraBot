@@ -1,9 +1,9 @@
 package me.bebeli555.ElytraBot.PathFinding;
 
 import java.util.ArrayList;
-
-import me.bebeli555.ElytraBot.Main;
 import me.bebeli555.ElytraBot.Renderer;
+import me.bebeli555.ElytraBot.Highway.GetPath;
+import me.bebeli555.ElytraBot.Highway.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -102,8 +102,6 @@ public class AStar {
 
 	// Add the surrounding blocks to the open list IF their clear
 	public static void AddToOpen(BlockPos Pos, boolean IgnoreAirNextToSolid, boolean Highway) {
-		boolean IsAdded = false;
-		BlockPos Gap = new BlockPos(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE);
 		ArrayList<BlockPos> OpenPositions = new ArrayList<BlockPos>();
 		OpenPositions.add(new BlockPos(Pos.add(1, 0, 0)));
 		OpenPositions.add(new BlockPos(Pos.add(-1, 0, 0)));

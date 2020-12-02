@@ -1,14 +1,14 @@
 [
 {
-  "modid": "eb",
-  "name": "ElytraPathfinder",
-  "description": "Elytra Pathfinding bot for 2b2t Highways",
-  "version": "${1.0}",
-  "mcversion": "1.12.2",
+  "modid": "examplemod",
+  "name": "Example Mod",
+  "description": "Example placeholder mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["bebeli555"],
-  "credits": "bebeli555",
+  "authorList": ["ExampleDude"],
+  "credits": "The Forge and FML guys, for making this example",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

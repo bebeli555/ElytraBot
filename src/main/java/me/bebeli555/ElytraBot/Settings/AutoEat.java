@@ -1,7 +1,6 @@
 package me.bebeli555.ElytraBot.Settings;
 
-import me.bebeli555.ElytraBot.Main;
-
+import me.bebeli555.ElytraBot.Highway.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Items;
@@ -23,7 +22,7 @@ public class AutoEat {
 	public void onUpdate(ClientTickEvent e) {
 		try {
 			if (IsElytrabotEnabled()) {
-				if (me.bebeli555.ElytraBot.Settings.Settings.AutoEat == true) {
+				if (Settings.getBoolean("AutoEat") == true) {
 					if (ShouldActivate() == true) {
 						if (GetFood() != -1) {
 							delay++;
@@ -104,7 +103,7 @@ public class AutoEat {
 	@SubscribeEvent
 	public void StopEating(LivingEntityUseItemEvent.Finish e) {
 		if (IsElytrabotEnabled()) {
-			if (me.bebeli555.ElytraBot.Settings.Settings.AutoEat == true) {
+			if (Settings.getBoolean("AutoEat") == true) {
 				if (Stop == true) {
 					KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 				}
