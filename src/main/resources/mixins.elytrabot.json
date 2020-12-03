@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.bebeli555.ElytraBot.Mixin",
+  "refmap": "mixins.elytrabot.refmap.json",
+  "client": [
+    "MixinTravel",
+    "MixinMotion",
+    "MixinPacket"
+  ]
+}
