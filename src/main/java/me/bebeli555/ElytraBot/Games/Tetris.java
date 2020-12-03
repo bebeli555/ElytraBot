@@ -251,7 +251,7 @@ public class Tetris extends GuiScreen{
 	}
 	
 	public static void GameOver() {
-		if (Integer.parseInt(String.valueOf(SettingsInfo.getSetting("TetrisBest").value)) < Score) {
+		if (SettingsInfo.getSetting("TetrisBest").value == null || Integer.parseInt(String.valueOf(SettingsInfo.getSetting("TetrisBest").value)) < Score) {
 			SettingsInfo.getSetting("TetrisBest").value = Score;
 			Settings.WriteSettings();
 		}
