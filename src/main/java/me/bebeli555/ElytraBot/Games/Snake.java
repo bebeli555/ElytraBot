@@ -202,7 +202,7 @@ public class Snake extends GuiScreen{
 	
 	public static void GameOver() {
 		if (GameOver == false) {
-			if (Integer.parseInt(String.valueOf(SettingsInfo.getSetting("SnakeBest").value)) < SnakeSize) {
+			if (SettingsInfo.getSetting("SnakeBest").value == null || Integer.parseInt(String.valueOf(SettingsInfo.getSetting("SnakeBest").value)) < SnakeSize) {
 				SettingsInfo.getSetting("SnakeBest").value = SnakeSize;
 				Settings.WriteSettings();
 			}
