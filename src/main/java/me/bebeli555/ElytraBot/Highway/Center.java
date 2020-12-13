@@ -26,7 +26,7 @@ public class Center {
 	}
 	
 	public static boolean IsManuverCentered(boolean Z) {
-		if (Z == false) {
+		if (!Z) {
 			double Coord = Math.round(mc.player.posZ * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 			
