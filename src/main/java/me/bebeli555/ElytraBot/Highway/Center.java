@@ -17,11 +17,8 @@ public class Center {
 		if (IsManuverCentered(Main.z)) {
 			return;
 		} else {
-			if (ShouldCenterBackwards()) {
-				CenterBackwards();
-			} else {
-				CenterForward();
-			}
+			if (ShouldCenterBackwards()) CenterBackwards();
+			else CenterForward();
 		}
 	}
 	
@@ -30,9 +27,8 @@ public class Center {
 			double Coord = Math.round(mc.player.posZ * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 			
-			if (StringCoord.contains(".5")) {
-				return true;
-			}
+			if (StringCoord.contains(".5")) return true;
+
 		} else {
 			double Coord = Math.round(mc.player.posX * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
@@ -110,7 +106,7 @@ public class Center {
 	}
 	
 	public static boolean IsCentered(boolean Z) {
-		if (Z == true) {
+		if (Z) {
 			double Coord = Math.round(mc.player.posZ * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 			
