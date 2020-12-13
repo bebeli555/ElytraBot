@@ -116,9 +116,7 @@ public class Center {
 			double Coord = Math.round(mc.player.posX * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 			
-			if (StringCoord.contains(".5")) {
-				return true;
-			}
+			if (StringCoord.contains(".5")) return true;
 		}
 		return false;
 	}
