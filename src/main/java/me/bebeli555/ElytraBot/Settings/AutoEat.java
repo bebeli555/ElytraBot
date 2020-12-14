@@ -22,8 +22,8 @@ public class AutoEat {
 	public void onUpdate(ClientTickEvent e) {
 		try {
 			if (IsElytrabotEnabled()) {
-				if (Settings.getBoolean("AutoEat") == true) {
-					if (ShouldActivate() == true) {
+				if (Settings.getBoolean("AutoEat")) {
+					if (ShouldActivate()) {
 						if (GetFood() != -1) {
 							delay++;
 							if (delay > 150) {
@@ -36,30 +36,22 @@ public class AutoEat {
 						}
 					} else {
 						// Just a thing that if the event messes up it wont eat all ur food
-						if (Stop == true) {
+						if (Stop) {
 							KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 							Stop = false;
 						}
 					}
 				}
 			}
-		} catch (NullPointerException e69) {
-			
-		}
+		} catch (NullPointerException e69) {}
 	}
 	
-	//Check if elytrabot is activated
+	//Check if ElytraBot is activated
 	public static boolean IsElytrabotEnabled() {
-		if (Main.toggle == true) {
-			return true;
-		} else if (Diagonal.toggle == true) {
-			return true;
-		} else if (Main.baritonetoggle == true) {
-			return true;
-		} else if (Diagonal.baritonetoggle == true) {
-			return true;
-		}
-		return false;
+		if (Main.toggle) return true;
+		else if (Diagonal.toggle) return true;
+		else if (Main.baritonetoggle) return true;
+		else return Diagonal.baritonetoggle;
 	}
 	
 	//Get food location in hotbar
@@ -92,19 +84,16 @@ public class AutoEat {
 		if (Health < 16) {
 			return true;
 		}
-		
-		if (Hunger.getFoodLevel() < 15) {
-			return true;
-		}
-		return false;
+
+		return Hunger.getFoodLevel() < 15;
 	}
 	
-	//Stop eating when food is aten
+	//Stop eating when food is eaten
 	@SubscribeEvent
 	public void StopEating(LivingEntityUseItemEvent.Finish e) {
 		if (IsElytrabotEnabled()) {
-			if (Settings.getBoolean("AutoEat") == true) {
-				if (Stop == true) {
+			if (Settings.getBoolean("AutoEat")) {
+				if (Stop) {
 					KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
 				}
 			}

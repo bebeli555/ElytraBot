@@ -39,7 +39,7 @@ public class TakeOff {
 			}
 			
 			//Jump
-			if (Jumped == false) {
+			if (!Jumped) {
 				if (mc.player.onGround) {
 					Jumped = true;
 					mc.player.jump();
@@ -49,7 +49,7 @@ public class TakeOff {
 			}
 			
 			//Reset takeoff
-			if (Jumped == true) {
+			if (Jumped) {
 				if (mc.player.onGround) {
 					ResetTakeOff();
 				}
@@ -65,7 +65,7 @@ public class TakeOff {
 				//This prevents packetfly from phasing through ground (Hopefully)
 				double PreventPhase = (StartPos + 0.6);
 				//Activate PacketFly
-				if (PacketFly == true) {
+				if (PacketFly) {
 					if (mc.player.posY > PreventPhase) {
 						if (!mc.player.isElytraFlying()) {
 							ActivatePacketFly = true;
@@ -73,7 +73,7 @@ public class TakeOff {
 					} else {
 						ResetTakeOff();
 					}
-				} else if (SlowGlide == true) {
+				} else if (SlowGlide) {
 					if (!mc.player.isElytraFlying()) {
 						mc.player.setVelocity(0, Settings.getDouble("SlowGlideSpeed"), 0);
 					}
@@ -84,7 +84,7 @@ public class TakeOff {
 			if (mc.player.isElytraFlying()) {
 				
 				//Center downwards
-				if (IsTakeOffCentered() == false) {
+				if (!IsTakeOffCentered()) {
 					TakeOffCenter();
 				} else if (Settings.getDouble("PrefY") != -1 && mc.player.posY > Settings.getDouble("PrefY")) {
 					//Center to PrefY level
@@ -103,7 +103,7 @@ public class TakeOff {
 			}
 			
 		} catch (Exception e) {
-			System.out.println("Exception while taking off Elytrabot");
+			System.out.println("Exception while taking off ElytraBot");
 			e.printStackTrace();
 		}
 	}
@@ -117,7 +117,7 @@ public class TakeOff {
 	public static void ActivateElytraBot() {
 		ActivatePacketFly = false;
 		if (IsTakeOffCentered()) {
-			if (diagonal == true) {
+			if (diagonal) {
 				Diagonal.manuver = false;
 				Diagonal.MoveOn = true;
 				Diagonal.setMove(false, true);
@@ -142,7 +142,7 @@ public class TakeOff {
 		String X = String.valueOf(Coord2);
 		
 
-		if (IsTakeOffCentered() == false && diagonal == false) {
+		if (!IsTakeOffCentered() && !diagonal) {
 			Main.MoveOn = true;
 			Main.ManuverSpeed = 0.065;
 			if (Main.direction.equals(EnumFacing.NORTH)) {
@@ -209,7 +209,7 @@ public class TakeOff {
 	}
 	
 	public static boolean IsTakeOffCentered() {
-		if (diagonal == true) {
+		if (diagonal) {
 			return true;
 		}
 		
@@ -217,7 +217,7 @@ public class TakeOff {
 		double Coord2 = Math.round(mc.player.posX * 10) / 10.0;
 		String Z = String.valueOf(Coord);
 		String X = String.valueOf(Coord2);
-		if (Main.z == true) {
+		if (Main.z) {
 			if (Z.contains(".5")) {
 				return true;
 			}
@@ -243,10 +243,7 @@ public class TakeOff {
 	
 	public static boolean HasElytraEquipped() {
 		ItemStack Elytra = mc.player.inventory.armorItemInSlot(2);
-		if (Elytra.getItem() == Items.ELYTRA) {
-			return true;
-		}
-		return false;
+		return Elytra.getItem() == Items.ELYTRA;
 	}
 	
 	public static void EquipElytra() {
@@ -271,7 +268,7 @@ public class TakeOff {
 
 	public static boolean IsClearToCenter() {
 		for (int i = 1; i < 35; i++) {
-			if (Main.status == "Forward") {
+			if (Main.status.equals("Forward")) {
 				BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 				BlockPos Check;
 				

@@ -51,10 +51,10 @@ public class AStar {
 			}
 			// Get the lowest F cost in open list and put that to closed list
 			int LowestF = Integer.MAX_VALUE;
-			for (int i = 0; i < Open.size(); i++) {
-				if (FCost(Open.get(i)) < LowestF) {
-					LowestF = FCost(Open.get(i));
-					Current = Open.get(i);
+			for (BlockPos blockPos : Open) {
+				if (FCost(blockPos) < LowestF) {
+					LowestF = FCost(blockPos);
+					Current = blockPos;
 				}
 			}
 			LowestF = Integer.MAX_VALUE;
@@ -108,25 +108,25 @@ public class AStar {
 		OpenPositions.add(new BlockPos(Pos.add(0, 0, 1)));
 		OpenPositions.add(new BlockPos(Pos.add(0, 0, -1)));
 
-		for (int i = 0; i < OpenPositions.size(); i++) {
-			if (!GetPath.IsSolid(OpenPositions.get(i))) {
-				if (!Closed.contains(OpenPositions.get(i))) {
-					if (GetPath.IsBlockInRenderDistance(OpenPositions.get(i))) {
+		for (BlockPos openPosition : OpenPositions) {
+			if (!GetPath.IsSolid(openPosition)) {
+				if (!Closed.contains(openPosition)) {
+					if (GetPath.IsBlockInRenderDistance(openPosition)) {
 						//Set parents
-						double value = FCost(OpenPositions.get(i));
-						Node n = Node.GetNodeFromBlockpos(OpenPositions.get(i));
+						double value = FCost(openPosition);
+						Node n = Node.GetNodeFromBlockpos(openPosition);
 						if (n == null) {
-							n = new Node(OpenPositions.get(i));
+							n = new Node(openPosition);
 						}
-						
-						if (!Open.contains(OpenPositions.get(i))) {
+
+						if (!Open.contains(openPosition)) {
 							n.SetCost(value);
 							n.SetParent(Current);
-							
-							if (Highway == true && LeaveGap == true) {
-								if (ShouldLeaveAsGap(OpenPositions.get(i))) {
-									if (!LeftGaps.contains(OpenPositions.get(i))) {
-										LeftGaps.add(OpenPositions.get(i));
+
+							if (Highway && LeaveGap) {
+								if (ShouldLeaveAsGap(openPosition)) {
+									if (!LeftGaps.contains(openPosition)) {
+										LeftGaps.add(openPosition);
 									}
 								}
 
@@ -135,15 +135,15 @@ public class AStar {
 								}
 							}
 
-							if (IgnoreAirNextToSolid == true) {
-								if (!HasBlockAround(OpenPositions.get(i))) {
-									Open.add(OpenPositions.get(i));
+							if (IgnoreAirNextToSolid) {
+								if (!HasBlockAround(openPosition)) {
+									Open.add(openPosition);
 								}
 							}
 
-							if (Highway == true) {
-								if (!LeftGaps.contains(OpenPositions.get(i))) {
-									Open.add(OpenPositions.get(i));
+							if (Highway) {
+								if (!LeftGaps.contains(openPosition)) {
+									Open.add(openPosition);
 								}
 							}
 						} else {
@@ -170,11 +170,8 @@ public class AStar {
 		} else {
 			Check = new BlockPos(Pos.add(0, 0, 1));
 		}
-		
-		if (GetPath.IsSolid(Check)) {
-			return true;
-		}
-		return false;
+
+		return GetPath.IsSolid(Check);
 	}
 	
 	//Checks if this not solid block has any solid blocks around it.
@@ -209,10 +206,8 @@ public class AStar {
 		Positions.add(new BlockPos(Pos.add(1, -1, -1)));
 		Positions.add(new BlockPos(Pos.add(0, -1, 0)));
 
-		for (int i = 0; i < Positions.size(); i++) {
-			if (GetPath.IsSolid(Positions.get(i))) {
-				return true;
-			}
+		for (BlockPos position : Positions) {
+			if (GetPath.IsSolid(position)) return true;
 		}
 		return false;
 	}
@@ -231,9 +226,7 @@ public class AStar {
 				FinalPath.add(n.GetParent());
 				n = Node.GetNodeFromBlockpos(n.GetParent());
 			}
-		}catch (NullPointerException e) {
-			return;
-		}
+		} catch (NullPointerException e) {}
 	}
 	
 	public static void Reset() {

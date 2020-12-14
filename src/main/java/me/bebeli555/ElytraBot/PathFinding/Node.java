@@ -38,8 +38,7 @@ public class Node {
 	}
 	
 	public static Node GetNodeFromBlockpos(BlockPos Pos) {
-		for (int i = 0; i < Nodes.size(); i++) {
-			Node n = Nodes.get(i);
+		for (Node n : Nodes) {
 			if (n.GetNode().equals(Pos)) {
 				return n;
 			}

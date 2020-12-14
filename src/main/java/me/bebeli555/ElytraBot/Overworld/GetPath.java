@@ -102,7 +102,7 @@ public class GetPath {
 		Gui.TurnOff();
 		mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.GREEN + "Yay we reached the destination!"));
 		//Play epic anvil destroy sound!
-		if (Settings.getBoolean("OverworldLog") == false) {
+		if (!Settings.getBoolean("OverworldLog")) {
 			BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 			mc.world.playSound(Player, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.AMBIENT, 100.0f, -5.0F, true);
 		}
@@ -116,11 +116,8 @@ public class GetPath {
 		int X = (int) ((int)mc.player.posX - Settings.getDouble("OverworldX"));
 		int Z = (int) ((int)mc.player.posZ - Settings.getDouble("OverworldZ"));
 		int Final = Math.abs(X) + Math.abs(Z);
-		
-		if (Final < 5) {
-			return true;
-		}
-		return false;
+
+		return Final < 5;
 	}
 	
 	//Returns the best speed to reach the next block in 1 tick.

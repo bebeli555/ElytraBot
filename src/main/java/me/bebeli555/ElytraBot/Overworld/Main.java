@@ -38,7 +38,7 @@ public class Main {
 	@SubscribeEvent
 	public void onUpdate(ClientTickEvent e) {
 		try {
-			if (toggle == true) {
+			if (toggle ) {
 				if (TakeOff.HasElytraEquipped()) {
 					if (!mc.player.onGround) {
 						if (!mc.player.isElytraFlying()) {
@@ -76,7 +76,7 @@ public class Main {
 				RemoveFromPath();
 				String message = me.bebeli555.ElytraBot.Overworld.GetPath.WhereToGo();
 				status = message;
-				if (toggle == false) {
+				if (!toggle) {
 					return;
 				}
 
@@ -87,7 +87,7 @@ public class Main {
 					return;
 				}
 				
-				// Control elytrafly
+				// Control ElytraFly
 				MoveOn = true;
 				if (message.contains("X") || message.contains("Z")) {
 					MoveDirection = message;
@@ -98,7 +98,7 @@ public class Main {
 				}
 			}
 		} catch (Exception e1) {
-			System.out.println("Exception in Overworld main class Elytrabot");
+			System.out.println("Exception in Overworld main class ElytraBot");
 			e1.printStackTrace();
 		}
 	}
@@ -179,9 +179,8 @@ public class Main {
 					GetPath.Path.remove(Check);
 				}
 				
-			} catch (IndexOutOfBoundsException e) {
-				
-			}
+			} catch (IndexOutOfBoundsException e) {}
+
 		}
 	}
 	
@@ -223,8 +222,7 @@ public class Main {
 			int Blocks = Math.abs(X) + Math.abs(Z);
 			Blocks = Math.abs(Blocks);
 
-			int seconds = 0;
-			seconds = (Blocks / BlocksASec) / 2;
+			int seconds = (Blocks / BlocksASec) / 2;
 			int p1 = seconds % 60;
 			int p2 = seconds / 60;
 			int p3 = p2 % 60;

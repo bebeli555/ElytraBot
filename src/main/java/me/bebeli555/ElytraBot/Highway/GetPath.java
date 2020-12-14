@@ -23,15 +23,13 @@ public class GetPath {
 	public static boolean IsSolid(BlockPos pos) {
 		if (mc.world.getBlockState(pos).getBlock() != Blocks.STANDING_BANNER && mc.world.getBlockState(pos).getBlock() != Blocks.WALL_BANNER) {
 			if (mc.world.getBlockState(pos).getBlock() != Blocks.STANDING_SIGN && mc.world.getBlockState(pos).getBlock() != Blocks.WALL_SIGN) {
-				if (mc.world.getBlockState(pos).getMaterial().isSolid()) {
-					return true;
-				}
+				return mc.world.getBlockState(pos).getMaterial().isSolid();
 			}
 		}
 		return false;
 	}
 	
-	//Tells elytrabot what to do
+	//Tells ElytraBot what to do
 	public static String WhereToGo() {
 		try {
 			LastCalculation++;
@@ -84,9 +82,7 @@ public class GetPath {
 				}
 			}
 
-			if (Path.contains(Player)) {
-				Path.remove(Player);
-			}
+			if (Path.contains(Player)) Path.remove(Player);
 
 			GetPath.RemovePassedSpots();
 			BlockPos Next = Path.get(Path.size() - 1);
@@ -223,13 +219,8 @@ public class GetPath {
 				}
 			}
 
-			if ((int) mc.player.posX != Current.getX()) {
-				if ((int) mc.player.posZ != Current.getZ()) {
-					return true;
-				}
-			}
-			
-			return false;
+			return (int) mc.player.posX != Current.getX() && (int) mc.player.posZ != Current.getZ();
+
 		}catch (Exception e) {
 			return false;
 		}
@@ -238,7 +229,7 @@ public class GetPath {
 	public static void RemovePassedSpots() {
 		//Remove already passed spots from the path
 		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-		if (Main.status == "Forward" || Main.status == "Backwards") {
+		if (Main.status.equals("Forward") || Main.status.equals("Backwards")) {
 			if (Main.direction.equals(EnumFacing.NORTH)) {
 				if (Main.status.equals("Forward")) {
 					BlockPos Remove = new BlockPos(Player.add(0, 0, 1));
@@ -299,10 +290,7 @@ public class GetPath {
 	}
 	
 	public static boolean IsBlockInRenderDistance(BlockPos Pos) {
-		if (mc.world.getChunkFromBlockCoords(Pos).isLoaded()) {
-			return true;
-		}
-		return false;
+		return mc.world.getChunkFromBlockCoords(Pos).isLoaded();
 	}
 	
 	public static boolean IsPlayerMoving() {
@@ -357,11 +345,9 @@ public class GetPath {
 					}
 				}
 			}
-			
-			if (Path.size() > 10) {
-				return true;
-			}
-			return false;
+
+			return Path.size() > 10;
+
 		} catch (IndexOutOfBoundsException e) {
 			return false;
 		}
@@ -406,12 +392,8 @@ public class GetPath {
 				}
 			}
 		}
-		
-		if (Path.size() < 10) {
-			return false;
-		}
-		
-		return true;
+
+		return Path.size() >= 10;
 	}
 }
 
