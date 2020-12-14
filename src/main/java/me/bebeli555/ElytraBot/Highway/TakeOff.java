@@ -218,16 +218,10 @@ public class TakeOff {
 		String Z = String.valueOf(Coord);
 		String X = String.valueOf(Coord2);
 		if (Main.z) {
-			if (Z.contains(".5")) {
-				return true;
-			}
+			return Z.contains(".5");
 		} else {
-			if (X.contains(".5")) {
-				return true;
-			}
+			return X.contains(".5");
 		}
-		
-		return false;
 	}
 	
 	public static int HasElytra() {
