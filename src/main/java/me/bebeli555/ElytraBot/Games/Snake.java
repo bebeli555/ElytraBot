@@ -83,15 +83,10 @@ public class Snake extends GuiScreen{
 			if (sec != lastSec) {	
 				delay = 0;
 				// Control snake movement
-				if (status.equals("Up")) {
-					SnakeY = SnakeY - 20;
-				} else if (status.equals("Down")) {
-					SnakeY = SnakeY + 20;
-				} else if (status.equals("Right")) {
-					SnakeX = SnakeX + 20;
-				} else if (status.equals("Left")) {
-					SnakeX = SnakeX - 20;
-				}
+				if (status.equals("Up")) SnakeY = SnakeY - 20;
+				 else if (status.equals("Down")) SnakeY = SnakeY + 20;
+				 else if (status.equals("Right")) SnakeX = SnakeX + 20;
+				 else if (status.equals("Left")) SnakeX = SnakeX - 20;
 				
 				if (!BodyX.isEmpty()) {
 					BodyX.remove(BodyX.get(0));
@@ -133,9 +128,8 @@ public class Snake extends GuiScreen{
 			drawRect(SnakeX, SnakeY, SnakeX + 20, SnakeY + 20, 0xFF55ff00);
 			drawRect(SnakeX + 3, SnakeY + 3, SnakeX + 8, SnakeY + 8, 0xFF000000);
 			for (int i = 0; i < BodyX.size(); i++) {
-				if (!BodyX.isEmpty()) {
+				if (!BodyX.isEmpty())
 					drawRect(BodyX.get(i), BodyY.get(i), BodyX.get(i) + 20, BodyY.get(i) + 20, 0xFF55ff00);
-				}
 			}
 		}
 		
@@ -157,7 +151,7 @@ public class Snake extends GuiScreen{
 		}
 		
 		//Game over screen
-		if (GameOver == true) {
+		if (GameOver) {
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(3.0F, 3.0F, 3.0F);
 			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Game Over!", 56, 63, 0xffff);
@@ -172,36 +166,28 @@ public class Snake extends GuiScreen{
 			GlStateManager.scale(1.5F, 1.5F, 1.5F);
 			mc.fontRenderer.drawStringWithShadow(ChatFormatting.AQUA + "Use " + ChatFormatting.GREEN + "ARROW KEYS " + ChatFormatting.AQUA + "To play!", 107, 110, 0xffff);
 			GlStateManager.popMatrix();
-			return;
 		}
 	}
 	
 	public static void OnClick(int i, int j, int k) {
 		//Start game 150, 150, 350, 350
-		if (150 < i && 350 > i && 150 < j && 350 > j) {
-			if (GameOver == true) {
-				StartGame();
-			}
-		}
+		if (150 < i && 350 > i && 150 < j && 350 > j)
+			if (GameOver) StartGame();
 	}
 	
 	public static void OnClick(GuiScreenEvent.KeyboardInputEvent.Post e) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			status = "Down";
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-			status = "Up";
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			status = "Right";
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			status = "Left";
-		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) status = "Down";
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) status = "Up";
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) status = "Right";
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) status = "Left";
 	}
-	
+
 	public static void GameOver() {
-		if (GameOver == false) {
+		if (!GameOver)
 			if (SettingsInfo.getSetting("SnakeBest").value == null || Integer.parseInt(String.valueOf(SettingsInfo.getSetting("SnakeBest").value)) < SnakeSize) {
 				SettingsInfo.getSetting("SnakeBest").value = SnakeSize;
 				Settings.WriteSettings();
@@ -214,7 +200,6 @@ public class Snake extends GuiScreen{
 			AppleX = 0;
 			AppleY = 0;
 		}
-	}
 	
 	public static void StartGame() {
 		GameOver = false;
@@ -244,13 +229,12 @@ public class Snake extends GuiScreen{
 				}
 			}
 			
-			if (SnakeX == AppleX) {
-				if (SnakeY == AppleY) {
-					AppleX = 0;
-					AppleY = 0;
-					continue;
-				}
+			if (SnakeX == AppleX && SnakeY == AppleY) {
+				AppleX = 0;
+				AppleY = 0;
+				continue;
 			}
+
 			if (AppleX < 140 || AppleX > 340 || AppleY < 140 || AppleY > 340) {
 				AppleX = 0;
 				AppleY = 0;

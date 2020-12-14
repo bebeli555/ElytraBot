@@ -38,7 +38,7 @@ public class Gui extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		if (!mc.isFullScreen()) {
-			if (warn == false) {
+			if (!warn) {
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "The GUI might not work on Window mode!"));
 				warn = true;
 			}
@@ -120,7 +120,7 @@ public class Gui extends GuiScreen {
 			}
 			for (int i2 = 0; i2 < n.Tips.size(); i2++) {
 				if (n.isInRightMode()) {
-					if (n.isClickInArea(mouseX, mouseY) || n.isTypeable() && n.parent == true) {
+					if (n.isClickInArea(mouseX, mouseY) || n.isTypeable() && n.parent) {
 						//Dont draw modes that are extends and are not extended
 						if (n.isAnExtend) {
 							if (!n.getExtendParent().isExtended) {

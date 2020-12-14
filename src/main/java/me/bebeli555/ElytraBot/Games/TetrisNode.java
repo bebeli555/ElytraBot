@@ -92,7 +92,7 @@ public class TetrisNode {
 	public boolean CanMoveRight() {
 		for (int i = 0; i < this.FamilyNodes.size(); i++) {
 			TetrisNode Node = GetNode(this.FamilyNodes.get(i).GetX() + 10, this.FamilyNodes.get(i).GetY());
-			if (Node != null && IsInFamily(Node) == false) {
+			if (Node != null && !IsInFamily(Node)) {
 				return false;
 			}
 			if (this.FamilyNodes.get(i).GetX() > Tetris.toX - 20) {
@@ -105,7 +105,7 @@ public class TetrisNode {
 	public boolean CanMoveLeft() {
 		for (int i = 0; i < this.FamilyNodes.size(); i++) {
 			TetrisNode Node = GetNode(this.FamilyNodes.get(i).GetX() - 10, this.FamilyNodes.get(i).GetY());
-			if (Node != null && IsInFamily(Node) == false) {
+			if (Node != null && !IsInFamily(Node)) {
 				return false;
 			}
 			if (this.FamilyNodes.get(i).GetX() < Tetris.fromX + 10) {
@@ -128,22 +128,17 @@ public class TetrisNode {
 	}
 	
 	public boolean IsInFamily(TetrisNode node) {
-		if (FamilyNodes.contains(node)) {
-			return true;
-		}
+		if (FamilyNodes.contains(node)) return true;
+
 		return false;
 	}
 	
 	public boolean CanGoDown() {		
 		for (int i = 0; i < this.FamilyNodes.size(); i++) {
 			TetrisNode Node = GetNode(this.FamilyNodes.get(i).GetX(), this.FamilyNodes.get(i).GetY() + multiplier);		
-			if (this.FamilyNodes.get(i).GetY() > Tetris.toY - 10) {
-				return false;
-			}
+			if (this.FamilyNodes.get(i).GetY() > Tetris.toY - 10) return false;
 			
-			if (Node != null && IsInFamily(Node) == false) {
-				return false;
-			}
+			if (Node != null && !IsInFamily(Node)) return false;
 		}
 		return true;
 	}
@@ -151,18 +146,15 @@ public class TetrisNode {
 	public static TetrisNode GetNode(int x, int y) {
 		for (int i = 0; i < Nodes.size(); i++) {
 			TetrisNode Node = Nodes.get(i);
-			if (Node.GetX() == x && Node.GetY() == y) {
-				return Node;
-			}
+			if (Node.GetX() == x && Node.GetY() == y) return Node;
 		}
 		return null;
 	}
 	
 	public void ClearFamily() {
 		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			if (!this.FamilyNodes.get(i).equals(this)) {
-				Nodes.remove(this.FamilyNodes.get(i));
-			}
+
+			if (!this.FamilyNodes.get(i).equals(this)) Nodes.remove(this.FamilyNodes.get(i));
 		}
 		this.FamilyNodes.clear();
 	}

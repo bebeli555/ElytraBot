@@ -53,9 +53,9 @@ public class Tetris extends GuiScreen{
 			Divided = 10;
 		}
 		long sec = System.currentTimeMillis() / Divided;
-		if (sec != lastSec && GameOver == false) {
+		if (sec != lastSec && !GameOver) {
 			//Create new node from the top.
-			if (TetrisNode.Nodes.isEmpty() || CurrentNode.CanGoDown() == false) {	
+			if (TetrisNode.Nodes.isEmpty() || !CurrentNode.CanGoDown()) {
 				Score++;
 				BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 				mc.world.playSound(Player, SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.AMBIENT, 10222.5f, 1.5f, true);
@@ -76,7 +76,7 @@ public class Tetris extends GuiScreen{
 		long sec2 = System.currentTimeMillis() / 40;
 		if (sec2 != lastSecMove) {
 			// Move automatically if holding key
-			if (GameOver == false && CurrentNode != null) {
+			if (!GameOver && CurrentNode != null) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 					BeenDown++;
 					if (BeenDown > 3) {
@@ -87,7 +87,6 @@ public class Tetris extends GuiScreen{
 						} else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
 							if (CurrentNode.CanMoveLeft()) {
 								CurrentNode.MoveLeft();
-								;
 							}
 						} else {
 							if (CurrentNode.CanGoDown()) {
@@ -119,7 +118,7 @@ public class Tetris extends GuiScreen{
 		GlStateManager.popMatrix();
 		
 		
-		if (GameOver == true) {
+		if (GameOver) {
 			// GameOver Screen
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(2.5F, 2.5F, 2.5F);
@@ -258,7 +257,7 @@ public class Tetris extends GuiScreen{
 		GameOver = true;
 		TetrisNode.Nodes.clear();
 	}
-	
+
 	public static void StartGame() {
 		GameOver = false;
 		Score = 0;
@@ -278,7 +277,7 @@ public class Tetris extends GuiScreen{
 	@SubscribeEvent
 	public void OnKeyInput(GuiScreenEvent.KeyboardInputEvent.Post e) {
 		//Control tetris block movement
-		if (CurrentNode == null || GameOver == true) {
+		if (CurrentNode == null || GameOver) {
 			return;
 		}
 		

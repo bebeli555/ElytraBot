@@ -29,13 +29,13 @@ public class SoundGUI extends GuiScreen{
 		drawRect(10, 40, 120, 60, 0x50ffffff);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.BOLD + "Music!", 45, 45, 0xffaa00);
 		
-		if (IsExtended == false) {
+		if (!IsExtended) {
 			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GOLD + "<-- ", 130, 45, 0xffff);
 			mc.fontRenderer.drawStringWithShadow("Right click to extend!", 153, 45, 0xffff);
 		} else {
 			//Chirp
 			drawRect(10, 60, 120, 80, 0x36393fff);
-			if (Chirp == true) {
+			if (Chirp) {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Chirp", 50, 65, 0xffff);	
 			} else {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Chirp", 50, 65, 0xffff);	
@@ -43,15 +43,13 @@ public class SoundGUI extends GuiScreen{
 			
 			//Far
 			drawRect(10, 80, 120, 100, 0x36393fff);
-			if (Far == true) {
+			if (Far) {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Far", 55, 85, 0xffff);	
-			} else {
-				mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Far", 55, 85, 0xffff);	
-			}
+			} else mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Far", 55, 85, 0xffff);
 			
 			//Stal
 			drawRect(10, 100, 120, 120, 0x36393fff);
-			if (Stal == true) {
+			if (Stal) {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Stal", 53, 105, 0xffff);	
 			} else {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Stal", 53, 105, 0xffff);	
@@ -59,7 +57,7 @@ public class SoundGUI extends GuiScreen{
 			
 			//Strad
 			drawRect(10, 120, 120, 140, 0x36393fff);
-			if (Strad == true) {
+			if (Strad) {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Strad", 50, 125, 0xffff);	
 			} else {
 				mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Strad", 50, 125, 0xffff);	
@@ -76,13 +74,10 @@ public class SoundGUI extends GuiScreen{
 		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 		
 		//Extend 10, 40, 120, 60
-		if (10 < i && 120 > i && 40 < j && 60 > j) {
-			if (IsExtended == true) {
-				IsExtended = false;
-			} else {
-				IsExtended = true;
-			}
-		}
+		if (10 < i && 120 > i && 40 < j && 60 > j)
+
+		if (IsExtended) IsExtended = false;
+		else IsExtended = true;
 		
 		if (!IsExtended) {
 			return;
@@ -90,7 +85,7 @@ public class SoundGUI extends GuiScreen{
 		
 		//Chirp 10, 60, 120, 80
 		if (10 < i && 120 > i && 60 < j && 80 > j) {
-			if (Chirp == true) {
+			if (Chirp) {
 				Reset();
 				Chirp = false;
 				mc.getSoundHandler().stopSounds();
@@ -102,7 +97,7 @@ public class SoundGUI extends GuiScreen{
 		
 		//Far 10, 80, 120, 100
 		if (10 < i && 120 > i && 80 < j && 100 > j) {
-			if (Far == true) {
+			if (Far) {
 				Reset();
 				Far = false;
 				mc.getSoundHandler().stopSounds();
@@ -114,7 +109,7 @@ public class SoundGUI extends GuiScreen{
 		
 		//Stal 10, 100, 120, 120
 		if (10 < i && 120 > i && 100 < j && 120 > j) {
-			if (Stal == true) {
+			if (Stal) {
 				Reset();
 				Stal = false;
 				mc.getSoundHandler().stopSounds();
@@ -126,7 +121,7 @@ public class SoundGUI extends GuiScreen{
 		
 		//Strad 10, 120, 120, 140
 		if (10 < i && 120 > i && 120 < j && 140 > j) {
-			if (Strad == true) {
+			if (Strad) {
 				Reset();
 				Strad= false;
 				mc.getSoundHandler().stopSounds();

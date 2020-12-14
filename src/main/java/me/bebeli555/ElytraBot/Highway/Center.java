@@ -11,32 +11,7 @@ public class Center {
 	//It also centers the other way when going straight again in Manuver class
 	
 	static Minecraft mc = Minecraft.getMinecraft();
-	
-	//Centers the player and also activates manuver when done
-	public static void ManuverCenter (boolean Right) {
-		if (IsManuverCentered(Main.z)) {
-			return;
-		} else {
-			if (ShouldCenterBackwards()) CenterBackwards();
-			else CenterForward();
-		}
-	}
-	
-	public static boolean IsManuverCentered(boolean Z) {
-		if (!Z) {
-			double Coord = Math.round(mc.player.posZ * 10) / 10.0;
-			String StringCoord = String.valueOf(Coord);
-			
-			if (StringCoord.contains(".5")) return true;
 
-		} else {
-			double Coord = Math.round(mc.player.posX * 10) / 10.0;
-			String StringCoord = String.valueOf(Coord);
-			
-			if (StringCoord.contains(".5")) return true;
-		}
-		return false;
-	}
 	
 	//Check if we overlapped the center target and then start centering backwards
 	public static boolean ShouldCenterBackwards() {
