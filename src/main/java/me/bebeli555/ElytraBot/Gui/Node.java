@@ -71,9 +71,9 @@ public class Node {
 						}
 					}
 					if (isExtended) {
-						n.setCoordMultiplier(n.coordMultiplier[0] + 0, n.coordMultiplier[1] + ((20 * times) + 3));
+						n.setCoordMultiplier(n.coordMultiplier[0], n.coordMultiplier[1] + ((20 * times) + 3));
 					} else {
-						n.setCoordMultiplier(n.coordMultiplier[0] + 0, n.coordMultiplier[1] + -((20 * times) + 3));
+						n.setCoordMultiplier(n.coordMultiplier[0], n.coordMultiplier[1] + -((20 * times) + 3));
 					}
  				}
  			}
@@ -146,7 +146,7 @@ public class Node {
  	
  	public String getRealText() {
  		if (this.isTypeable()) {
- 			if (this.stringValue.isEmpty() && this.isKeybind || !this.isKeybind && this.stringValue == "-1") {
+ 			if (this.stringValue.isEmpty() && this.isKeybind || !this.isKeybind && this.stringValue.equals("-1")) {
  				return this.text + "NONE";
  			} else {
  				return this.text + this.getStringValue();
@@ -249,7 +249,7 @@ public class Node {
 			}
 		}
 		
- 		if (isClickable == true) {
+ 		if (isClickable) {
  			if (Mouse.isButtonDown(1) && !this.isAnExtend) {
  				if (this.isExtendable) {
  					this.extend(this.Extends.size());
@@ -259,7 +259,7 @@ public class Node {
  				return;
  			}
  			
-			if (parent == true) {
+			if (parent) {
 				parent = false;
 				if (isMode(id)) {
 					setModesCoordinate(id);
@@ -293,7 +293,7 @@ public class Node {
 	
 	public static boolean isAnyModeActivated() {
 		for (int i = 0; i < SetNodes.Modes.length; i++) {
-			if (SetNodes.Modes[i].parent == true) {
+			if (SetNodes.Modes[i].parent) {
 				return true;
 			}
 		}
@@ -302,7 +302,7 @@ public class Node {
 	
 	public void setTextColor() {
  		if (this.isClickable() && !this.isTypeable()) {
- 			if (parent == true) {
+ 			if (parent) {
  				this.textColor = ChatFormatting.GREEN;
  			} else {
  				this.textColor = ChatFormatting.RED;
@@ -346,14 +346,13 @@ public class Node {
 			
 			if (n.mode.equals("null")) {				
 				if (isAnyModeActivated()) {
-					if (mode == "Games") {
+					if (mode.equals("Games"))
 						n.setCoordMultiplier(130, 120);
-					} else if (mode == "Highway") {
+					 else if (mode.equals("Highway"))
 						n.setCoordMultiplier(120, 110);
-					} else if (mode == "Overworld") {
+					 else if (mode.equals("Overworld"))
 						n.setCoordMultiplier(120, 40);
-					}
-				} 
+				}
 			}
 		}
 		

@@ -26,7 +26,7 @@ public class SetNodes {
 		n.setText("Highway", null, 1F);
 		n.addTip("A Mode designed for the highways just");
 		n.addTip("look at the direction u wanna go and start it.");
-		n.addTip("Also has alot of settings.");
+		n.addTip("Also has a lot of settings.");
 		Modes[0] = n;
 		
 		n = new Node(430, 190, true, "null");
@@ -57,7 +57,7 @@ public class SetNodes {
 		extend.addTip("forward when activated.");
 		n = new Node(430, 120, true, "Highway");
 		n.setText("UseBaritone", null, 1F);
-		n.addTip("Whenever elytrabot gets stuck with this on");
+		n.addTip("Whenever ElytraBot gets stuck with this on");
 		n.addTip("It will activate baritone and walk forward");
 		n.addTip("To overcome the obstacle and then keep flying.");
 		n.isExtendable = true;
@@ -67,7 +67,7 @@ public class SetNodes {
 		extend.setText("DropItems", null, 1F);
 		extend.setColor(0x36F700FF);
 		extend.isAnExtend = true;
-		extend.addTip("When Elytrabot is repairing armor with this on");
+		extend.addTip("When ElytraBot is repairing armor with this on");
 		extend.addTip("It will drop useless items from ur inventory if its full");
 		extend.addTip("So it can take off the armor for maximum mending!");
 		Node extend2;
@@ -81,7 +81,7 @@ public class SetNodes {
 		extend2.addTip("This value then it will start repairing it.");
 		n = new Node(430, 140, true, "Highway");
 		n.setText("AutoRepair", null, 1F);
-		n.addTip("When elytra durability is low elytrabot will");
+		n.addTip("When elytra durability is low ElytraBot will");
 		n.addTip("Automatically mend the elytra with XP bottles");
 		n.addTip("Also it takes ur armor off if enough space in inv");
 		n.addTip("XP Bottles are required to have in ur inv.");
@@ -97,15 +97,15 @@ public class SetNodes {
 		
 		n = new Node(430, 180, true, "Highway");
 		n.setText("AutoEat", null, 1F);
-		n.addTip("When health or hunger gets low elytrabot");
-		n.addTip("Will eat food. Prefers gaps and doesnt eat chorus");
+		n.addTip("When health or hunger gets low ElytraBot");
+		n.addTip("Will eat food. Prefers gaps and doesn't eat chorus");
 		n.addTip("The food is required to be in ur HOTBAR for this to work");
 
 		n = new Node(430, 200, true, "Highway");
 		n.setText("PrefY: ", ChatFormatting.DARK_AQUA, 1F);
-		n.addTip("If set elytrabot will get to the set Y-Coordinate on takeoff.");
+		n.addTip("If set ElytraBot will get to the set Y-Coordinate on takeoff.");
 		n.addTip("So basicly if u set it to 122.5 it will get to that Y coordinate and then start going.");
-		n.addTip("Tip: With this set elytrabot will not center the Y so u should set");
+		n.addTip("Tip: With this set ElytraBot will not center the Y so u should set");
 		n.addTip("it to like y.5 so it would be centered!");
 		n.addTip(ChatFormatting.RED + "Don't set this setting if you don't need it!");
 		n.setTypeAble(true);
@@ -113,9 +113,9 @@ public class SetNodes {
 		n.allowDoubleValue = true;
 		
 		n = new Node(430, 230, false, "Highway");
-		n.setText("Stopat Setting:", ChatFormatting.GOLD, 1.25F);
+		n.setText("Stop Setting:", ChatFormatting.GOLD, 1.25F);
 		n.addTip("When 1 of the set coords is reached");
-		n.addTip("Elytrabot will stop.");
+		n.addTip("ElytraBot will stop.");
 		
 		n = new Node(430, 250, true, "Highway");
 		n.setText("X: ", ChatFormatting.DARK_AQUA, 1F);
@@ -129,7 +129,7 @@ public class SetNodes {
 		
 		n = new Node(430, 290, true, "Highway");
 		n.setText("Logout", null, 1F);
-		n.addTip("When elytrabot reaches the set coordinates");
+		n.addTip("When ElytraBot reaches the set coordinates");
 		n.addTip("And stops then it will also logout with this on.");
 		n.id = "StopAtLog";
 		
@@ -149,9 +149,9 @@ public class SetNodes {
 		n.setTypeAble(true);
 		n.allowDoubleValue = true;
 		
-		//Keybinds
+		//KeyBinds
 		n = new Node(550, 100, false, "Highway, Overworld");
-		n.setText("Keybinds:", ChatFormatting.GOLD, 1.25F);
+		n.setText("KeyBinds:", ChatFormatting.GOLD, 1.25F);
 		
 		n = new Node(550, 120, true, "Highway, Overworld");
 		n.setText("GUI: ", ChatFormatting.DARK_AQUA, 1F);
@@ -182,7 +182,7 @@ public class SetNodes {
 		n = new Node(550, 210, true, "Highway");
 		n.setText("PacketFly", null, 1F);
 		n.addTip("Uses packetfly with takeoff");
-		n.addTip("Best for servers that dont kick u for it!");
+		n.addTip("Best for servers that don't kick you for it!");
 		
 		extend = new Node(550, 250, true, "Highway");
 		extend.setText("Speed: ", ChatFormatting.DARK_AQUA, 1F);
@@ -208,7 +208,7 @@ public class SetNodes {
 		
 		n = new Node(430, 150, false, "Overworld");
 		n.setText("Destination:", ChatFormatting.GOLD, 1.25F);
-		n.addTip("The Coordinates that elytrabot");
+		n.addTip("The Coordinates that ElytraBot");
 		n.addTip("Will go to.");
 		
 		n = new Node(430, 170, true, "Overworld");
@@ -225,7 +225,7 @@ public class SetNodes {
 		n.setText("Logout", null, 1F);
 		n.id = "OverworldLog";
 		n.addTip("When the Destination is reached with this on");
-		n.addTip("Elytrabot will also logout from the server.");
+		n.addTip("ElytraBot will also logout from the server.");
 		
 		//Add nodes to their groups this means that only 1 of them can be activated at a time
 		Node.getNodeFromID("Highway").addToGroup("Overworld");
