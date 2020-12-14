@@ -381,13 +381,13 @@ public class GetPath {
 	public static boolean IsPathStraight() {
 		int X = -1;
 		int Z = -1;
-		
-		for (int i = 0; i < Path.size(); i++) {
+
+		for (BlockPos blockPos : Path) {
 			X = Path.get(0).getX();
 			Z = Path.get(0).getZ();
-			
-			if (Path.get(i).getX() != X) {
-				if (Path.get(i).getZ() != Z) {
+
+			if (blockPos.getX() != X) {
+				if (blockPos.getZ() != Z) {
 					return false;
 				}
 			}

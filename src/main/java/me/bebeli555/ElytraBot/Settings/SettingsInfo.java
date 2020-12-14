@@ -36,9 +36,9 @@ public class SettingsInfo {
 	}
 	
 	public static SettingsInfo getSetting(String name) {
-		for (int i = 0; i < Settings.size(); i++) {
-			if (Settings.get(i).getName().equals(name)) {
-				return Settings.get(i);
+		for (SettingsInfo setting : Settings) {
+			if (setting.getName().equals(name)) {
+				return setting;
 			}
 		}
 		return null;
@@ -57,11 +57,11 @@ public class SettingsInfo {
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String lines[] = line.split(" ");
-			for (int i = 0; i < lines.length; i++) {
-				if (lines[i].equalsIgnoreCase(name)) {
-		        	String arr[] = line.split(" ", 2);
-		        	String firstWord = arr[0];
-		        	return firstWord;
+			for (String s : lines) {
+				if (s.equalsIgnoreCase(name)) {
+					String arr[] = line.split(" ", 2);
+					String firstWord = arr[0];
+					return firstWord;
 				}
 			}
 		}

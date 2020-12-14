@@ -13,11 +13,11 @@ public class Settings {
 	public static void WriteSettings(){
 		try {
 			SetSettingsFromGUI();
-			//Clears the file so it doesnt mess up
+			//Clears the file so it doesn't mess up
 			File file = new File(Init.Path);
-			if (file.exists() && file.isFile()) {
+			if (file.exists() && file.isFile())
 				file.delete();
-			}
+
 			file.createNewFile();
 			FileOutputStream fos = new FileOutputStream(file);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
@@ -29,7 +29,7 @@ public class Settings {
 				bw.newLine();
 			}
 			bw.newLine();
-			bw.write("(Dont touch this file manually)"); bw.newLine();
+			bw.write("(Don't touch this file manually)"); bw.newLine();
 			bw.write("If its causing issues then delete it.");
 			bw.close();
 		}catch (Exception e) {
@@ -108,8 +108,8 @@ public class Settings {
 				continue;
 			}
 			
-			if (n.isKeybind == true) {
-				if (n.stringValue == "0.0") {
+			if (n.isKeybind) {
+				if (n.stringValue.equals("0.0")) {
 					s.setValue("");
 				} else {
 					s.setValue(n.stringValue);

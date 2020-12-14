@@ -31,11 +31,8 @@ public class AutoSwitch {
 	public static boolean isElytraBroken() {
 		ItemStack elytra = mc.player.inventory.armorItemInSlot(2);
 		int durability = (elytra.getMaxDamage()-elytra.getItemDamage());
-		
-		if (durability < 2) {
-			return true;
-		}
-		return false;
+
+		return durability < 2;
 	}
 	
 	public static int getBestElytra() {

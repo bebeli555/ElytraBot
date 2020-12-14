@@ -26,18 +26,14 @@ public class StopAt {
 	public void onUpdate(LivingUpdateEvent e) {
 		double X = Settings.getDouble("StopAtX");
 		double Z = Settings.getDouble("StopAtZ");
-		if (Main.toggle == true || Diagonal.toggle == true) {
-			if (X != -1) {
-				toggle = true;
-			} else if (Z != -1) {
-				toggle = true;
-			}
-		} else {
-			toggle = false;
-		}
+		if (Main.toggle || Diagonal.toggle) {
+			if (X != -1) toggle = true;
+			 else if (Z != -1) toggle = true;
+		} else toggle = false;
+
 		
-		if (toggle == true) {
-			if (e.getEntity().getName() == mc.player.getName()) {
+		if (toggle) {
+			if (e.getEntity().getName().equals(mc.player.getName())) {
 				for(int i=1;i<=30;i++){  
 					if (X != -1) {
 						if ((int) mc.player.posX == X + i) {
@@ -55,13 +51,13 @@ public class StopAt {
 	}
 	
 	public static void UnCheck () {
-		if (Settings.getBoolean("StopAtLog") == false) {
+		if (!Settings.getBoolean("StopAtLog")) {
 			BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 			mc.world.playSound(Player, SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.AMBIENT, 100.0f, -5.0F, true);
 		}
 		mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "Stopping..." + ChatFormatting.GRAY + " Reached Max Coordinate"));
 		Gui.TurnOff();
-		if (Settings.getBoolean("StopAtLog") == true) {
+		if (Settings.getBoolean("StopAtLog")) {
 			mc.world.sendQuittingDisconnectingPacket();
 		}
 		
@@ -80,7 +76,7 @@ public class StopAt {
 		    trayIcon.displayMessage("ElytraBot", message, type);
 		}catch(Exception e){
 			System.out.println("Elytrabot: Exception trying to send an alert.");
-			System.out.println(e.getCause());
+			e.getCause();
 		}
 	}
 }

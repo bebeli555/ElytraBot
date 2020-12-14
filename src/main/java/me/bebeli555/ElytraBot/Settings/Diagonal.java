@@ -35,19 +35,18 @@ public class Diagonal {
 	public static boolean lmao5 = false;
 	public static int okposx;
 	public static int okposz;
-	public static boolean idkshit = false;
 
 	
 	@SubscribeEvent
 	public void onUpdate(TickEvent.ClientTickEvent e) {
 			try {
 			//uses baritone if the player is stuck...
-			if (baritonetoggle == true) {
+			if (baritonetoggle) {
 				TakeOff.ActivatePacketFly = false;
-				if (mc.player.onGround == true) {
+				if (mc.player.onGround) {
 					//Walks 35 blocks straight with baritone if player is stuck and then continues flying
 					bdelay2++;
-					if (lmao5 == false) {
+					if (!lmao5) {
 						UseBaritone();
 						lmao5 = true;
 					}
@@ -74,10 +73,10 @@ public class Diagonal {
 				}
 			}
 			//End of baritone setting
-			if (toggle == true) {
+			if (toggle) {
 				
 				// Activate baritone support if player is stuck
-				if (status == "Going Straight") {
+				if (status.equals("Going Straight")) {
 					if (Settings.getBoolean("UseBaritone")) {
 						delay21++;
 						if (delay21 == 2) {
@@ -99,7 +98,7 @@ public class Diagonal {
 				//Takeoff
 				MoveOn = false;
 
-				if (takeoff == false) {
+				if (!takeoff) {
 					status = "Attempting to TakeOff";
 					delay18++;
 					if (delay18 > 400) {
@@ -111,7 +110,7 @@ public class Diagonal {
 						}
 					}
 					
-					if (mc.player.onGround == true) {						
+					if (mc.player.onGround) {
 						//Activate baritone if above block is bedrock
 						BlockPos playerPos = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
 						BlockPos Check = playerPos.add(0, 2, 0);
@@ -139,38 +138,23 @@ public class Diagonal {
 					
 					//Other Stuff
 					if (mc.player.isElytraFlying()) {
-						if (manuver == false) {
+						if (!manuver) {
 							MoveOn = true;
 							setMove(false, true);
 							status = "Going Straight";
 						}
 					}
 					
-					if (mc.player.onGround == true) {
+					if (mc.player.onGround) {
 						takeoff = false;
 					}
 				}
 			}
-		}catch (NullPointerException e4) {
+		} catch (NullPointerException e4) {
 			
 		}
 	}
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	//Methods
 	public static void Check() {
 		Yaw = mc.player.rotationYaw;
@@ -187,13 +171,12 @@ public class Diagonal {
 		Yaw = 0;
 		takeoff = false;
 		MoveOn = false;
-		idkshit = false;
 	}
 	
 	//Flight method 0.18
 	public static void Flight(boolean right, boolean straight, double y) {
 		if (mc.player.isElytraFlying()) {
-			if (straight == true) {
+			if (straight) {
 				double Speed = Settings.getDouble("Speed") / 1.408;
 				
 				if (facing.equals("--")) {

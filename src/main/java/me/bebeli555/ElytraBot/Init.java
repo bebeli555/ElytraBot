@@ -58,7 +58,7 @@ public class Init{
 		File file = new File(mc.mcDataDir.getPath() + "/ElytraBot");
 		file.mkdir();
 
-		// Create Settings file inside ElytaBot Directory
+		// Create Settings file inside ElytraBot Directory
 		File file2 = new File(Path);
 		try {
 			if (file2.createNewFile()) {

@@ -34,17 +34,17 @@ public class Renderer extends GuiScreen {
 	//This renders the Status above your hotbar
 	@SubscribeEvent
 	public void render(RenderGameOverlayEvent.Text e) {
-		if (me.bebeli555.ElytraBot.Highway.Main.toggle == true) {
+		if (me.bebeli555.ElytraBot.Highway.Main.toggle) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + me.bebeli555.ElytraBot.Highway.Main.status, 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.Highway.Main.baritonetoggle == true) {
+		} else if (me.bebeli555.ElytraBot.Highway.Main.baritonetoggle) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + "Using baritone to overcome obstacle", 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.Settings.AutoRepair.AutoRepair == true) {
+		} else if (me.bebeli555.ElytraBot.Settings.AutoRepair.AutoRepair) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + "Repairing Elytra", 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.Settings.Diagonal.toggle == true) {
+		} else if (me.bebeli555.ElytraBot.Settings.Diagonal.toggle) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + me.bebeli555.ElytraBot.Settings.Diagonal.status, 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.Settings.Diagonal.baritonetoggle == true) {
+		} else if (me.bebeli555.ElytraBot.Settings.Diagonal.baritonetoggle) {
 			mc.fontRenderer.drawString(ChatFormatting.RED + "ElytraBot Status: " + ChatFormatting.BLUE + "Using baritone to overcome obstacle", 390, 475, 0xffff);
-		} else if (me.bebeli555.ElytraBot.Overworld.Main.toggle == true) {
+		} else if (me.bebeli555.ElytraBot.Overworld.Main.toggle) {
 			String Seconds = ChatFormatting.GOLD + " Seconds: ";
 			String Minutes = ChatFormatting.GOLD + " Minutes: ";
 			String Hours = ChatFormatting.GOLD + "Hours: ";
@@ -78,12 +78,6 @@ public class Renderer extends GuiScreen {
 			if (me.bebeli555.ElytraBot.Overworld.Main.toggle) {
 				X = (int) ((int) mc.player.posX - Settings.getDouble("OverworldX"));
 				Z = (int) ((int) mc.player.posZ - Settings.getDouble("OverworldZ"));
-			} else {
-				if (Settings.getDouble("StopAtX") < Settings.getDouble("StopAtZ")) {
-					
-				} else {
-					
-				}
 			}
 			int Blocks = Math.abs(X) + Math.abs(Z);
 			Blocks = Math.abs(Blocks);
@@ -104,24 +98,21 @@ public class Renderer extends GuiScreen {
 	@SubscribeEvent
 	public void RenderPath(RenderWorldLastEvent e) {
 		IsRendering = true;
-		if (IsRendering == true) {
 			try {
-				for (int i = 0; i < PositionsYellow.size(); i++) {
-					BlockPos BlockPos4 = new BlockPos(PositionsYellow.get(i));
+				for (BlockPos blockPos : PositionsYellow) {
+					BlockPos BlockPos4 = new BlockPos(blockPos);
 					final AxisAlignedBB Axis = GetAxis(BlockPos4);
 					DrawPathBox(Axis, 0f, 0f, 1f, 1f, false, true);
 				}
 
-				for (int i = 0; i < PositionsGreen.size(); i++) {
-					BlockPos BlockPos4 = new BlockPos(PositionsGreen.get(i));
+				for (BlockPos blockPos : PositionsGreen) {
+					BlockPos BlockPos4 = new BlockPos(blockPos);
 					final AxisAlignedBB Axis = GetAxis(BlockPos4);
 					DrawPathBox(Axis, 0f, 0f, 1f, 1f, true, false);
 				}
-			} catch (Exception e22) {
-
-			}
+			} catch (Exception e22) {}
 		}
-	}
+
 	
     public static void DrawPathBox(AxisAlignedBB axisalignedbb, float red, float green, float blue, float alpha, boolean Green, boolean Yellow)
     {
@@ -132,10 +123,10 @@ public class Renderer extends GuiScreen {
         GlStateManager.disableDepth();
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
-        if (Green == true) {
+        if (Green) {
         	//Green
         	GL11.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-        } else if (Yellow == true){
+        } else if (Yellow){
         	//Yellow
         	GL11.glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
         } else {

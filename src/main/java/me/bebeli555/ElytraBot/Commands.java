@@ -72,9 +72,7 @@ public class Commands {
 					if (Node.getNodeFromID(SettingsInfo.Settings.get(i).getName()) != null) {
 						mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + SettingsInfo.Settings.get(i).getName()));
 					}
-				} catch (Exception bebeli555) {
-					
-				}
+				} catch (Exception bebeli555) {}
 			}
 		}
 		
@@ -114,7 +112,7 @@ public class Commands {
 					}
 				}
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "No Setting Found! Type" + ChatFormatting.GREEN + " ++Settings " + ChatFormatting.RED + "to display them"));
-			}catch (Exception bebeli555IsAPersonThatDoesShitAndThenHeDoesMoreShitButWhyDoesHeDoSoMuchShitItDoesntMakeAnySense) {
+			}catch (Exception bebeli555IsACoolParson) {
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "Wrong input! Type" + ChatFormatting.GREEN + " ++Commands " + ChatFormatting.RED + "for help!"));
 			}
 		} else {

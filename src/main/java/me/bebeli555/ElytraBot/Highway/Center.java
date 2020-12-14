@@ -14,9 +14,7 @@ public class Center {
 
 	//Centers the player and also activates manuver when done
 	public static void ManuverCenter (boolean Right) {
-		if (IsManuverCentered(Main.z)) {
-			return;
-		} else {
+		if (!IsManuverCentered(Main.z)) {
 			if (ShouldCenterBackwards()) CenterBackwards();
 			else CenterForward();
 		}
@@ -27,15 +25,14 @@ public class Center {
 			double Coord = Math.round(mc.player.posZ * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 
-			if (StringCoord.contains(".5")) return true;
+			return StringCoord.contains(".5");
 
 		} else {
 			double Coord = Math.round(mc.player.posX * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 
-			if (StringCoord.contains(".5")) return true;
+			return StringCoord.contains(".5");
 		}
-		return false;
 	}
 	
 	//Check if we overlapped the center target and then start centering backwards
@@ -51,27 +48,24 @@ public class Center {
 				if (CoordZ.contains(".7") || CoordZ.contains(".6") || CoordZ.contains(".8"))
 					return true;
 
-			 else if (CoordZ.contains(".3") || CoordZ.contains(".2") || CoordZ.contains(".4")) return true;
+			 else return CoordZ.contains(".3") || CoordZ.contains(".2") || CoordZ.contains(".4");
 		} else if (Main.direction.equals(EnumFacing.WEST)) {
 			if (Coord < 0)
 				if (CoordX.contains(".7") || CoordX.contains(".6") || CoordX.contains(".8"))
 					return true;
-			else if (CoordX.contains(".3") || CoordX.contains(".2") || CoordX.contains(".4"))
-				return true;
+			else return CoordX.contains(".3") || CoordX.contains(".2") || CoordX.contains(".4");
 
 		} else if (Main.direction.equals(EnumFacing.EAST)) {
 			if (Coord < 0)
 				if (CoordX.contains(".3") || CoordX.contains(".2") || CoordX.contains(".4"))
 					return true;
 
-			 else if (CoordX.contains(".7") || CoordX.contains(".6") || CoordX.contains(".8"))
-				return true;
+			 else return CoordX.contains(".7") || CoordX.contains(".6") || CoordX.contains(".8");
 
 		} else if (Main.direction.equals(EnumFacing.SOUTH)) {
 			if (Coord2 < 0)
 				if (CoordZ.contains(".3") || CoordZ.contains(".2") || CoordZ.contains(".4")) return true;
-			 else if (CoordZ.contains(".7") || CoordZ.contains(".6") || CoordZ.contains(".8"))
-				return true;
+			 else return CoordZ.contains(".7") || CoordZ.contains(".6") || CoordZ.contains(".8");
 		}
 		return false;
 	}
@@ -84,10 +78,7 @@ public class Center {
 		double Coord = Math.round(mc.player.posY * 10) / 10.0;
 		String CoordY = String.valueOf(Coord);
 
-		if (CoordY.contains(".3") || CoordY.contains(".4")) {
-			return true;
-		}
-		return false;
+		return CoordY.contains(".3") || CoordY.contains(".4");
 	}
 	
 	public static boolean IsCentered(boolean Z) {
@@ -95,15 +86,14 @@ public class Center {
 			double Coord = Math.round(mc.player.posZ * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 
-			if (StringCoord.contains(".5")) return true;
+			return StringCoord.contains(".5");
 
 		} else {
 			double Coord = Math.round(mc.player.posX * 10) / 10.0;
 			String StringCoord = String.valueOf(Coord);
 
-			if (StringCoord.contains(".5")) return true;
+			return StringCoord.contains(".5");
 		}
-		return false;
 	}
 	
 	//Start going forward slowly
