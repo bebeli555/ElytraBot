@@ -31,7 +31,6 @@ public class Snake extends GuiScreen{
 	static int delay = 0;
 	static String status = "Right";
 	static boolean GameOver = true;
-	static int Score = 0;
 	static int AppleX, AppleY;
 	static long lastSec = 0;
 
@@ -247,10 +246,7 @@ public class Snake extends GuiScreen{
 				AppleY = 0;
 				continue;
 			}
-
-			if (AppleX != 0 && AppleY != 0) {
-				break;
-			}
+			break;
 		}
 	}
 }
