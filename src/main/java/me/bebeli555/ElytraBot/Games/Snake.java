@@ -134,7 +134,8 @@ public class Snake extends GuiScreen{
 			drawRect(SnakeX, SnakeY, SnakeX + 20, SnakeY + 20, 0xFF55ff00);
 			drawRect(SnakeX + 3, SnakeY + 3, SnakeX + 8, SnakeY + 8, 0xFF000000);
 			for (int i = 0; i < BodyX.size(); i++) {
-				drawRect(BodyX.get(i), BodyY.get(i), BodyX.get(i) + 20, BodyY.get(i) + 20, 0xFF55ff00);
+				if (!BodyX.isEmpty())
+					drawRect(BodyX.get(i), BodyY.get(i), BodyX.get(i) + 20, BodyY.get(i) + 20, 0xFF55ff00);
 			}
 		}
 

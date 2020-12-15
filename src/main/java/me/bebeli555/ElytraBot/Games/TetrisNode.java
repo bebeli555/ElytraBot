@@ -2,12 +2,11 @@ package me.bebeli555.ElytraBot.Games;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.Minecraft;
 
 public class TetrisNode {
 	//Object that is the 1 block of a tetris thing.
 	
-	static Minecraft mc = Minecraft.getMinecraft();
+
 	public static ArrayList<TetrisNode> Nodes = new ArrayList<TetrisNode>();
 	private ArrayList<TetrisNode> FamilyNodes = new ArrayList<TetrisNode>();
 	public static int multiplier = 10;
@@ -23,14 +22,11 @@ public class TetrisNode {
 		this.rotation = 1;
 		Nodes.add(this);
 	}
-	
-	public void RemoveFromList() {
-		Nodes.remove(this);
-	}
+
 	
 	public void SetColor(int color) {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			this.FamilyNodes.get(i).color = color;
+		for (TetrisNode familyNode : this.FamilyNodes) {
+			familyNode.color = color;
 		}
 	}
 	
@@ -39,8 +35,8 @@ public class TetrisNode {
 	}
 	
 	public void SetShape(String shape) {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			this.FamilyNodes.get(i).shape = shape;
+		for (TetrisNode familyNode : this.FamilyNodes) {
+			familyNode.shape = shape;
 		}
 	}
 	
@@ -69,48 +65,45 @@ public class TetrisNode {
 	}
 	
 	public void MoveDown() {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			TetrisNode Node = this.FamilyNodes.get(i);
-			Node.SetY(this.FamilyNodes.get(i).GetY() + multiplier);
+		for (TetrisNode Node : this.FamilyNodes) {
+			Node.SetY(Node.GetY() + multiplier);
 		}
 	}
 	
 	public void MoveRight() {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			TetrisNode Node = this.FamilyNodes.get(i);
+		for (TetrisNode Node : this.FamilyNodes) {
 			Node.SetX(Node.GetX() + multiplier);
 		}
 	}
 	
 	public void MoveLeft() {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			TetrisNode Node = this.FamilyNodes.get(i);
+		for (TetrisNode Node : this.FamilyNodes) {
 			Node.SetX(Node.GetX() - multiplier);
 		}
 	}
 	
 	public boolean CanMoveRight() {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			TetrisNode Node = GetNode(this.FamilyNodes.get(i).GetX() + 10, this.FamilyNodes.get(i).GetY());
+		for (TetrisNode familyNode : this.FamilyNodes) {
+			TetrisNode Node = GetNode(familyNode.GetX() + 10, familyNode.GetY());
 			if (Node != null && !IsInFamily(Node)) {
 				return false;
 			}
-			if (this.FamilyNodes.get(i).GetX() > Tetris.toX - 20) {
+			if (familyNode.GetX() > Tetris.toX - 20) {
 				return false;
-			}	
+			}
 		}
 		return true;
 	}
 	
 	public boolean CanMoveLeft() {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			TetrisNode Node = GetNode(this.FamilyNodes.get(i).GetX() - 10, this.FamilyNodes.get(i).GetY());
+		for (TetrisNode familyNode : this.FamilyNodes) {
+			TetrisNode Node = GetNode(familyNode.GetX() - 10, familyNode.GetY());
 			if (Node != null && !IsInFamily(Node)) {
 				return false;
 			}
-			if (this.FamilyNodes.get(i).GetX() < Tetris.fromX + 10) {
+			if (familyNode.GetX() < Tetris.fromX + 10) {
 				return false;
-			}	
+			}
 		}
 		return true;
 	}
@@ -128,33 +121,30 @@ public class TetrisNode {
 	}
 	
 	public boolean IsInFamily(TetrisNode node) {
-		if (FamilyNodes.contains(node)) return true;
-
-		return false;
+		return FamilyNodes.contains(node);
 	}
 	
-	public boolean CanGoDown() {		
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
-			TetrisNode Node = GetNode(this.FamilyNodes.get(i).GetX(), this.FamilyNodes.get(i).GetY() + multiplier);		
-			if (this.FamilyNodes.get(i).GetY() > Tetris.toY - 10) return false;
-			
+	public boolean CanGoDown() {
+		for (TetrisNode familyNode : this.FamilyNodes) {
+			TetrisNode Node = GetNode(familyNode.GetX(), familyNode.GetY() + multiplier);
+			if (familyNode.GetY() > Tetris.toY - 10) return false;
+
 			if (Node != null && !IsInFamily(Node)) return false;
 		}
 		return true;
 	}
 
 	public static TetrisNode GetNode(int x, int y) {
-		for (int i = 0; i < Nodes.size(); i++) {
-			TetrisNode Node = Nodes.get(i);
+		for (TetrisNode Node : Nodes) {
 			if (Node.GetX() == x && Node.GetY() == y) return Node;
 		}
 		return null;
 	}
 	
 	public void ClearFamily() {
-		for (int i = 0; i < this.FamilyNodes.size(); i++) {
+		for (TetrisNode familyNode : this.FamilyNodes) {
 
-			if (!this.FamilyNodes.get(i).equals(this)) Nodes.remove(this.FamilyNodes.get(i));
+			if (!familyNode.equals(this)) Nodes.remove(familyNode);
 		}
 		this.FamilyNodes.clear();
 	}
@@ -166,14 +156,14 @@ public class TetrisNode {
 		int OldY4 = this.FamilyNodes.get(3).GetY();
 		
 		for (int i2 = 0; i2 < 100; i2++) {
-			for (int i3 = 0; i3 < this.FamilyNodes.size(); i3++) {
-				this.FamilyNodes.get(i3).SetY(this.FamilyNodes.get(i3).GetY() + 10);
+			for (TetrisNode familyNode : this.FamilyNodes) {
+				familyNode.SetY(familyNode.GetY() + 10);
 			}
 			int NodeY = this.y;
 			
 			if (!this.CanGoDown()) {
-				for (int i = 0; i < this.FamilyNodes.size(); i++) {
-					this.FamilyNodes.get(i).downpos = (this.FamilyNodes.get(i).GetY() - this.GetY()) + NodeY;
+				for (TetrisNode familyNode : this.FamilyNodes) {
+					familyNode.downpos = (familyNode.GetY() - this.GetY()) + NodeY;
 				}
 				this.FamilyNodes.get(0).SetY(OldY);
 				this.FamilyNodes.get(1).SetY(OldY2);
