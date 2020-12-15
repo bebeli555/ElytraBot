@@ -35,7 +35,6 @@ public class Snake extends GuiScreen{
 	static int AppleX, AppleY;
 	static long lastSec = 0;
 
-
 	public static void DrawSnake() {
 		//Draw the thingy rectangle and text
 		drawRect(150, 150, 350, 350, 0xFF000000);
@@ -81,10 +80,20 @@ public class Snake extends GuiScreen{
 			if (sec != lastSec) {
 				delay = 0;
 				// Control snake movement
-				if (status.equals("Up")) SnakeY = SnakeY - 20;
-				 else if (status.equals("Down")) SnakeY = SnakeY + 20;
-				 else if (status.equals("Right")) SnakeX = SnakeX + 20;
-				 else if (status.equals("Left")) SnakeX = SnakeX - 20;
+				switch (status) {
+					case "Up":
+						SnakeY -= 20;
+						break;
+					case "Down":
+						SnakeY += 20;
+						break;
+					case "Right":
+						SnakeX += 20;
+						break;
+					case "Left":
+						SnakeX -= 20;
+						break;
+				}
 
 				if (!BodyX.isEmpty()) {
 					BodyX.remove(BodyX.get(0));
@@ -167,7 +176,7 @@ public class Snake extends GuiScreen{
 		}
 	}
 
-	public static void OnClick(int x, int i, int j) {
+	public static void OnClick(int i, int j, int k) {
 		//Start game 150, 150, 350, 350
 		if (150 < i && 350 > i && 150 < j && 350 > j)
 			if (GameOver) StartGame();
@@ -238,10 +247,7 @@ public class Snake extends GuiScreen{
 				AppleY = 0;
 				continue;
 			}
-
-			if (AppleX != 0 && AppleY != 0) {
-				break;
-			}
+			break;
 		}
 	}
 }
