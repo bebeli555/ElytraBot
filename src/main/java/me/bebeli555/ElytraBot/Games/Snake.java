@@ -17,7 +17,7 @@ import scala.util.Random;
 
 public class Snake extends GuiScreen{
 	//Snake game made by: bebeli555
-	
+
 	static Minecraft mc = Minecraft.getMinecraft();
 	static ArrayList<Integer> BodyX = new ArrayList<Integer>();
 	static ArrayList<Integer> BodyY = new ArrayList<Integer>();
@@ -34,10 +34,8 @@ public class Snake extends GuiScreen{
 	static int Score = 0;
 	static int AppleX, AppleY;
 	static long lastSec = 0;
-	
-	static int X = 220;
-	static int Y = 220;
-	
+
+
 	public static void DrawSnake() {
 		//Draw the thingy rectangle and text
 		drawRect(150, 150, 350, 350, 0xFF000000);
@@ -45,19 +43,19 @@ public class Snake extends GuiScreen{
 		GlStateManager.scale(3.0F, 3.0F, 3.0F);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.GREEN + "Snake", 70, 40, 0xffff);
 		GlStateManager.popMatrix();
-		
+
 		//Draw personal best
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(2.0F, 2.0F, 2.0F);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.GOLD + "Personal Best: " + ChatFormatting.GREEN + (int)Settings.getDouble("SnakeBest"), 85, 180, 0xffff);
 		GlStateManager.popMatrix();
-		
+
 		//Game over.
 		if (SnakeX < 140 || SnakeX > 340 || SnakeY < 140 || SnakeY > 340) {
 			GameOver();
 		}
-		
-		if (!GameOver) {			
+
+		if (!GameOver) {
 			//Die if head is colliding in body
 			for (int i = 0; i < BodyX.size(); i++) {
 				if (BodyX.get(i) == SnakeX) {
@@ -67,27 +65,27 @@ public class Snake extends GuiScreen{
 					}
 				}
 			}
-			
+
 			//Draw score
 			mc.fontRenderer.drawStringWithShadow(ChatFormatting.RED + "Score = " + ChatFormatting.GREEN + SnakeSize, 158, 155, 0xffff);
-			
+
 			// Generate apple
 			if (AppleX == 0 || AppleY == 0) {
 				GenerateApple();
 			}
-			
+
 			// Draw apple
 			drawRect(AppleX, AppleY, AppleX + 20, AppleY + 20, 0xFFff0000);
 
 			long sec = System.currentTimeMillis() / 150;
-			if (sec != lastSec) {	
+			if (sec != lastSec) {
 				delay = 0;
 				// Control snake movement
 				if (status.equals("Up")) SnakeY = SnakeY - 20;
 				 else if (status.equals("Down")) SnakeY = SnakeY + 20;
 				 else if (status.equals("Right")) SnakeX = SnakeX + 20;
 				 else if (status.equals("Left")) SnakeX = SnakeX - 20;
-				
+
 				if (!BodyX.isEmpty()) {
 					BodyX.remove(BodyX.get(0));
 					BodyY.remove(BodyY.get(0));
@@ -96,14 +94,14 @@ public class Snake extends GuiScreen{
 				}
 				lastSec = sec;
 			}
-			
+
 			//Eat apple
 			if (SnakeX == AppleX) {
 				if (SnakeY == AppleY) {
 					SnakeSize++;
 					AppleX = 0;
 					AppleY = 0;
-					
+
 					//More body for snake bcs he fat and eating all those sugary apples
 					if (BodyX.isEmpty()) {
 						BodyX.add(LastSnakeX);
@@ -116,14 +114,14 @@ public class Snake extends GuiScreen{
 					mc.world.playSound(Player, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.AMBIENT, 100.0f, 2.0F, true);
 				}
 			}
-			
+
 			LastSnakeX = SnakeX;
 			LastSnakeY = SnakeY;
 			if (!BodyX.isEmpty()) {
 				LastBodyX = BodyX.get(BodyX.size() - 1);
 				LastBodyY = BodyY.get(BodyY.size() - 1);
 			}
-			
+
 			// Draw snake
 			drawRect(SnakeX, SnakeY, SnakeX + 20, SnakeY + 20, 0xFF55ff00);
 			drawRect(SnakeX + 3, SnakeY + 3, SnakeX + 8, SnakeY + 8, 0xFF000000);
@@ -132,7 +130,7 @@ public class Snake extends GuiScreen{
 					drawRect(BodyX.get(i), BodyY.get(i), BodyX.get(i) + 20, BodyY.get(i) + 20, 0xFF55ff00);
 			}
 		}
-		
+
 		//Draw white lines
 		for (int i = 0; i < 10; i++) {
 			GlStateManager.pushMatrix();
@@ -141,7 +139,7 @@ public class Snake extends GuiScreen{
 			drawRect(680 + ((i * 20) * 4), 150 *4, 682 + ((i * 20) * 4), 350 *4, 0xFFFFFFFF);
 			GlStateManager.popMatrix();
 		}
-		
+
 		//Other lines This is big math time.
 		for (int i = 0; i < 11; i++) {
 			GlStateManager.pushMatrix();
@@ -149,7 +147,7 @@ public class Snake extends GuiScreen{
 			drawRect(150 * 4, 600 + ((i * 20) * 4), 350 * 4, 602 + ((i * 20) * 4), 0xFFFFFFFF);
 			GlStateManager.popMatrix();
 		}
-		
+
 		//Game over screen
 		if (GameOver) {
 			GlStateManager.pushMatrix();
@@ -168,13 +166,13 @@ public class Snake extends GuiScreen{
 			GlStateManager.popMatrix();
 		}
 	}
-	
-	public static void OnClick(int i, int j, int k) {
+
+	public static void OnClick(int x, int i, int j) {
 		//Start game 150, 150, 350, 350
 		if (150 < i && 350 > i && 150 < j && 350 > j)
 			if (GameOver) StartGame();
 	}
-	
+
 	public static void OnClick(GuiScreenEvent.KeyboardInputEvent.Post e) {
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) status = "Down";
@@ -200,7 +198,7 @@ public class Snake extends GuiScreen{
 			AppleX = 0;
 			AppleY = 0;
 		}
-	
+
 	public static void StartGame() {
 		GameOver = false;
 		SnakeX = 230;
@@ -208,7 +206,7 @@ public class Snake extends GuiScreen{
 		status = "Up";
 		SnakeSize = 1;
 	}
-	
+
 	public static void GenerateApple() {
 		for (int i = 0; i < 100; i++) {
 			Random rand = new Random();
@@ -216,7 +214,7 @@ public class Snake extends GuiScreen{
 			int random2 = rand.nextInt(10);
 			AppleX = 150 + random * 20;
 			AppleY = 150 + random2 * 20;
-			
+
 			for (int i2 = 0; i2 < BodyX.size(); i2++) {
 				if (!BodyX.isEmpty()) {
 					if (BodyX.get(i2) == AppleX) {
@@ -228,7 +226,7 @@ public class Snake extends GuiScreen{
 					}
 				}
 			}
-			
+
 			if (SnakeX == AppleX && SnakeY == AppleY) {
 				AppleX = 0;
 				AppleY = 0;
@@ -240,8 +238,8 @@ public class Snake extends GuiScreen{
 				AppleY = 0;
 				continue;
 			}
-			
-			if (AppleX != 0 && AppleY != 0) { 
+
+			if (AppleX != 0 && AppleY != 0) {
 				break;
 			}
 		}

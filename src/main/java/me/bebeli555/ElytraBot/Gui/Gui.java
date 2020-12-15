@@ -45,15 +45,19 @@ public class Gui extends GuiScreen {
 		} else {
 			warn = false;
 		}
-		
+
 		//Draw all the Gui Rectangles and their texts
 		out: for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
 			if (n.isInRightMode()) {
-				
+
 				//Don't draw modes that are extends and are not extended
-					if (n.isAnExtend && !n.getExtendParent().isExtended)
+				if (n.isAnExtend) {
+					if (!n.getExtendParent().isExtended) {
 						continue out;
+
+					}
+				}
 
 				if (!n.isClickable)
 					n.setColor(0x3632a8a2);
@@ -68,7 +72,7 @@ public class Gui extends GuiScreen {
 					} else {
 						mc.fontRenderer.drawStringWithShadow(n.textColor + n.getText(), n.getTextX(), n.getTextY(), 0xffff);
 					}
-					
+
 					if (n.isTypeable()) {
 						mc.fontRenderer.drawStringWithShadow(n.textColor + n.getText() + ChatFormatting.RED + "NONE", n.getTextX(), n.getTextY(), 0xffff);
 					}
@@ -78,14 +82,14 @@ public class Gui extends GuiScreen {
 				GlStateManager.popMatrix();
 			}
 		}
-		
+
 		//Draw games thing
 		if (currentMode.equals("Games")) {
 			Snake.DrawSnake();
 			Tetris.DrawTetris(400, 150, false);
 			SoundGUI.drawSoundGUI();
 		}
-		
+
 		//Draw lines around the GUI Objects
 		for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
@@ -96,11 +100,11 @@ public class Gui extends GuiScreen {
 						drawContainer(true, true, false, false, color, n);
 					else if (n.isAboveClickable())
 						drawContainer(true, true, false, true, color, n);
-					 else drawContainer(true, true, true, !n.isBelowClickable(), color, n);
+					else drawContainer(true, true, true, !n.isBelowClickable(), color, n);
 				}
 			}
 		}
-		
+
 		//Draw tips
 		for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
@@ -121,7 +125,7 @@ public class Gui extends GuiScreen {
 								continue;
 							}
 						}
-						
+
 						int y = (int) ((n.getTextY() + (i2 * 10)) * n.getScale());
 						if (n.isTypeable() && n.parent) {
 							String text = ChatFormatting.GOLD + "Use you're keyboard to set this value!";
@@ -129,7 +133,7 @@ public class Gui extends GuiScreen {
 							mc.fontRenderer.drawStringWithShadow(text, n.getX2() + 10, (n.getTextY() + (i2 * 10)) * n.getScale(), 0xffff);
 							break;
 						}
-						
+
 						if (!n.Tips.get(i2).equals("")) {
 							drawRect(n.getX2() + 8, y - 2, n.getX2() + mc.fontRenderer.getStringWidth(n.Tips.get(i2)) + 12, y + 10, 0xFF000000);
 							mc.fontRenderer.drawStringWithShadow(n.Tips.get(i2), n.getX2() + 10, (n.getTextY() + (i2 * 10)) * n.getScale(), 0xffff);
@@ -138,7 +142,7 @@ public class Gui extends GuiScreen {
 				}
 			}
 		}
-		
+
 		//Start and stop
 		Node n = Node.getNodeFromID("StartAndStop");
 		if (AutoEat.IsElytrabotEnabled() || me.bebeli555.ElytraBot.Overworld.Main.toggle) {
@@ -149,7 +153,7 @@ public class Gui extends GuiScreen {
 			on = false;
 		}
 		n.id = "StartAndStop";
-		
+
 		GlStateManager.popMatrix();
 	}
 
@@ -166,7 +170,7 @@ public class Gui extends GuiScreen {
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
 
@@ -174,20 +178,20 @@ public class Gui extends GuiScreen {
 				n.centerText(n.getRealText(), n.getScale());
 				n.parent = false;
 			}
-			
+
 			if (!n.isInRightMode()) {
 				continue;
 			}
-			
+
 			if (n.isAnExtend) {
 				if (!n.getExtendParent().isExtended) {
 					continue;
 				}
 			}
-			
+
 			if (n.isClickInArea(x, y)) {
 				n.setClicked();
-				
+
 				if (n.id.equals("StartAndStop")) {
 					if (on) {
 						TurnOff();
@@ -207,10 +211,10 @@ public class Gui extends GuiScreen {
 	public void onKeyPress(GuiScreenEvent.KeyboardInputEvent.Post e) {
 		if (currentMode.equals("Games"))
 			Snake.OnClick(e);
-		
+
 		for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
-			
+
 			if (n.isTypeable()) {
 				if (n.parent) {
 					if (n.shouldResetStringValue) {
@@ -218,12 +222,12 @@ public class Gui extends GuiScreen {
 						n.stringValue = "";
 						n.shouldResetStringValue = false;
 					}
-					
+
 					if (Keyboard.isKeyDown(Keyboard.KEY_BACK) || Keyboard.isKeyDown(Keyboard.KEY_DELETE)) {
 						n.resetValue();
 						return;
 					}
-					
+
 					if (n.isKeybind) {
 						if (Keyboard.isKeyDown(Keyboard.getEventKey())) {
 							n.setStringValue(Keyboard.getKeyName(Keyboard.getEventKey()));
@@ -231,14 +235,14 @@ public class Gui extends GuiScreen {
 							return;
 						}
 					}
-					
+
 					n.setStringValue(n.getStringValue() + Keyboard.getEventCharacter());
-					
+
 					if (n.getStringValue().length() == 0) {
 						n.resetValue();
 						return;
 					}
-					
+
 					if (n.getStringValue().equals("-") || n.getStringValue().substring(n.getStringValue().length() - 1).equals("."))
 						if (!n.getStringValue().substring(n.getStringValue().length() - 1).equals(".") && n.allowDoubleValue)
 							return;
@@ -254,11 +258,11 @@ public class Gui extends GuiScreen {
 				n.value = Double.parseDouble(n.getStringValue());
 			else
 				n.value = Integer.parseInt(n.getStringValue());
-		   } catch (Exception e2) {
-			
+		} catch (Exception e2)
+		{
 		}
 	}
-	
+
 	// Activate the GUI.
 	@SubscribeEvent
 	public void onUpdate(ClientTickEvent e) {
@@ -271,10 +275,10 @@ public class Gui extends GuiScreen {
 				if (mc.gameSettings.guiScale != 2) {
 					mc.gameSettings.guiScale = 2;
 				}
-				
+
 				me.bebeli555.ElytraBot.Commands.GuiON = false;
 				delay = 0;
-				
+
 				Minecraft.getMinecraft().displayGuiScreen(new Gui());
 			}
 		}
@@ -287,7 +291,7 @@ public class Gui extends GuiScreen {
 			}
 		}
 	}
-	
+
 	public static void drawContainer(boolean rightSide, boolean leftSide, boolean upSide, boolean downSide, int color, Node n) {
 		if (upSide) {
 			drawRect(n.getX(), n.getY(), n.getX2(), n.getY() + 1, color);
@@ -302,13 +306,13 @@ public class Gui extends GuiScreen {
 			drawRect(n.getX2(), n.getY(), n.getX2() + 1, n.getY2() + 1, color);
 		}
 	}
-	
+
 	public static void SetStuff() {
 		Settings.SetSettingsFromGUI();
 		Settings.WriteSettings();
 		Main.FlySpeed = Settings.getDouble("Speed");
 	}
-	
+
 	//Turns ElytraBot OFF
 	public static void TurnOff() {
 		try {
@@ -318,7 +322,7 @@ public class Gui extends GuiScreen {
 			Renderer.PositionsRed.clear();
 			Renderer.PositionsGreen.clear();
 		} catch (Exception e) {
-			
+
 		}
 		if (Settings.getDouble("Speed") < originalSpeed) {
 			Settings.setValue("Speed", originalSpeed);
@@ -346,7 +350,7 @@ public class Gui extends GuiScreen {
 		me.bebeli555.ElytraBot.Settings.Diagonal.UnCheck();
 		me.bebeli555.ElytraBot.Settings.StopAt.toggle = false;
 	}
-	
+
 	//Turns ElytraBot ON
 	public static void TurnOn() {
 		originalSpeed = Settings.getDouble("Speed");

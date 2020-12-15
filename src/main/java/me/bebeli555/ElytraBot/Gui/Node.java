@@ -356,7 +356,7 @@ public class Node {
 			}
 		}
 		
-		if (mode == "Overworld") {
+		if (mode.equals("Overworld")) {
 			getNodeFromID("ElytraFly:").setCoordMultiplier(0, -80);
 			getNodeFromID("Speed").setCoordMultiplier(0, -80);
 			getNodeFromID("GlideSpeed").setCoordMultiplier(0, -80);
@@ -374,9 +374,9 @@ public class Node {
 	}
 	
 	public static Node getNodeFromID(String id) {
-		for (int i = 0; i < Nodes.size(); i++) {
-			if (Nodes.get(i).getID().toLowerCase().equals(id.toLowerCase())) { 
-				return Nodes.get(i);
+		for (Node node : Nodes) {
+			if (node.getID().toLowerCase().equals(id.toLowerCase())) {
+				return node;
 			}
 		}
 		return null;
