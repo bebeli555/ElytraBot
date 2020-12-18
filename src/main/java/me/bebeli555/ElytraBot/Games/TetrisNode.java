@@ -19,6 +19,7 @@ public class TetrisNode {
 	public TetrisNode(int x, int y) {
 		this.x = x;
 		this.y = y;
+
 		this.rotation = 1;
 		Nodes.add(this);
 	}
