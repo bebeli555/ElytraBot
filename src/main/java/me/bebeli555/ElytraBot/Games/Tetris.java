@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import scala.util.Random;
+
+import java.util.Objects;
 
 public class Tetris extends GuiScreen{
 	//Tetris. A cool game, can be active while Snake is active lol, its fun.
@@ -27,7 +27,7 @@ public class Tetris extends GuiScreen{
 	static long lastSec = 0;
 	static long lastSecMove = 0;
 	
-	public static void DrawTetris(int drawX, int drawY, boolean DuelMode) {
+	public static void DrawTetris(int drawX, int drawY) {
 		//Set values
 		fromX = drawX;
 		toX = fromX + 150;
@@ -250,8 +250,8 @@ public class Tetris extends GuiScreen{
 	}
 	
 	public static void GameOver() {
-		if (SettingsInfo.getSetting("TetrisBest").value == null || Integer.parseInt(String.valueOf(SettingsInfo.getSetting("TetrisBest").value)) < Score) {
-			SettingsInfo.getSetting("TetrisBest").value = Score;
+		if (Objects.requireNonNull(SettingsInfo.getSetting("TetrisBest")).value == null || Integer.parseInt(String.valueOf(Objects.requireNonNull(SettingsInfo.getSetting("TetrisBest")).value)) < Score) {
+			Objects.requireNonNull(SettingsInfo.getSetting("TetrisBest")).value = Score;
 			Settings.WriteSettings();
 		}
 		GameOver = true;
@@ -272,31 +272,5 @@ public class Tetris extends GuiScreen{
 		drawRect(Thisx, Thisy, Thisx2, Thisy + 2, 0xFFFFFFFF);
 		drawRect(Thisx, Thisy2, Thisx2, Thisy2 + 2, 0xFFFFFFFF);
 		GlStateManager.popMatrix();
-	}
-	
-	@SubscribeEvent
-	public void OnKeyInput(GuiScreenEvent.KeyboardInputEvent.Post e) {
-		//Control tetris block movement
-		if (CurrentNode == null || GameOver) {
-			return;
-		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			if (CurrentNode.CanMoveRight()) {
-				CurrentNode.MoveRight();
-			}
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			if (CurrentNode.CanMoveLeft()) {
-				CurrentNode.MoveLeft();
-			}
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			CurrentNode.MoveCompletelyDown();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-			CurrentNode.Rotate();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			if (CurrentNode.CanGoDown()) {
-				CurrentNode.MoveDown();
-			}
-		}
 	}
 }

@@ -7,8 +7,8 @@ public class TetrisNode {
 	//Object that is the 1 block of a tetris thing.
 	
 
-	public static ArrayList<TetrisNode> Nodes = new ArrayList<TetrisNode>();
-	private ArrayList<TetrisNode> FamilyNodes = new ArrayList<TetrisNode>();
+	public static ArrayList<TetrisNode> Nodes = new ArrayList<>();
+	private final ArrayList<TetrisNode> FamilyNodes = new ArrayList<>();
 	public static int multiplier = 10;
 	private int x, y;
 	private int color;
@@ -112,19 +112,11 @@ public class TetrisNode {
 	public ArrayList<TetrisNode> GetFamily(){
 		return FamilyNodes;
 	}
+
 	
-	public void MoveCompletelyDown() {
-		for (int i = 0; i < 150; i++) {
-			if (this.CanGoDown()) {
-				this.MoveDown();
-			}
-		}
-	}
-	
-	public boolean IsInFamily(TetrisNode node) {
-		return FamilyNodes.contains(node);
-	}
-	
+	public boolean IsInFamily(TetrisNode node) { return FamilyNodes.contains(node); }
+
+
 	public boolean CanGoDown() {
 		for (TetrisNode familyNode : this.FamilyNodes) {
 			TetrisNode Node = GetNode(familyNode.GetX(), familyNode.GetY() + multiplier);

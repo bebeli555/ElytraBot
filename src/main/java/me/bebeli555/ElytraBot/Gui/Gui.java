@@ -20,6 +20,8 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
+import java.util.Objects;
+
 public class Gui extends GuiScreen {
 	static Minecraft mc = Minecraft.getMinecraft();
 	static int delay;
@@ -86,7 +88,7 @@ public class Gui extends GuiScreen {
 		//Draw games thing
 		if (currentMode.equals("Games")) {
 			Snake.DrawSnake();
-			Tetris.DrawTetris(400, 150, false);
+			Tetris.DrawTetris(400, 150);
 			SoundGUI.drawSoundGUI();
 		}
 
@@ -363,7 +365,7 @@ public class Gui extends GuiScreen {
 				me.bebeli555.ElytraBot.Highway.Main.toggle = true;
 				me.bebeli555.ElytraBot.Highway.Main.Check();
 			}
-		} else if (Node.getNodeFromID("Overworld").parent) {
+		} else if (Objects.requireNonNull(Node.getNodeFromID("Overworld")).parent) {
 			if (Main.FlySpeed > 2) {
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "The speed you are using is too high the Maximum speed for this mode to work is 2"));
 			}

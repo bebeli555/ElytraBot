@@ -1,6 +1,8 @@
 package me.bebeli555.ElytraBot.Games;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
 import org.lwjgl.input.Keyboard;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -193,8 +195,8 @@ public class Snake extends GuiScreen{
 
 	public static void GameOver() {
 		if (!GameOver)
-			if (SettingsInfo.getSetting("SnakeBest").value == null || Integer.parseInt(String.valueOf(SettingsInfo.getSetting("SnakeBest").value)) < SnakeSize) {
-				SettingsInfo.getSetting("SnakeBest").value = SnakeSize;
+			if (Objects.requireNonNull(SettingsInfo.getSetting("SnakeBest")).value == null || Integer.parseInt(String.valueOf(Objects.requireNonNull(SettingsInfo.getSetting("SnakeBest")).value)) < SnakeSize) {
+				Objects.requireNonNull(SettingsInfo.getSetting("SnakeBest")).value = SnakeSize;
 				Settings.WriteSettings();
 			}
 			GameOver = true;
