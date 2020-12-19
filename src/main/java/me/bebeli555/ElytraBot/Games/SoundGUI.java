@@ -19,11 +19,12 @@ public class SoundGUI extends GuiScreen{
 	static boolean Strad = false;
 	public static boolean StopPlaySpeed = false;
 	public static float PlaySpeed = 1.0F;
+	public static String playSpeed = "";
 	
 	public static void drawSoundGUI() {
-		if (StopPlaySpeed)
-			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GOLD + "Type numbers in your keyboard to set this!", 125, 145, 0xffff);
-
+		if (StopPlaySpeed) {
+			mc.fontRenderer.drawStringWithShadow(ChatFormatting.GOLD + "Type numbers in your keyboard to set this!", 125, 145, 0xffff);	
+		}
 		
 		drawRect(10, 40, 120, 60, 0x50ffffff);
 		mc.fontRenderer.drawStringWithShadow(ChatFormatting.BOLD + "Music!", 45, 45, 0xffaa00);
@@ -68,14 +69,18 @@ public class SoundGUI extends GuiScreen{
 		}
 	}
 	
-	public static void ClickEvent(int i, int j) {
+	public static void ClickEvent(int i, int j, int k) {
 		StopPlaySpeed = false;
 		BlockPos Player = new BlockPos(mc.player.posX, mc.player.posY, mc.player.posZ);
-
+		
 		//Extend 10, 40, 120, 60
-		if (10 < i && 120 > i && 40 < j && 60 > j) {
-			IsExtended = !IsExtended;
-		    return;
+		if (10 < i && 120 > i && 40 < j && 60 > j)
+
+		if (IsExtended) IsExtended = false;
+		else IsExtended = true;
+		
+		if (!IsExtended) {
+			return;
 		}
 		
 		//Chirp 10, 60, 120, 80
