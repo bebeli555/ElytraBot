@@ -20,8 +20,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
-import java.util.Objects;
-
 public class Gui extends GuiScreen {
 	static Minecraft mc = Minecraft.getMinecraft();
 	static int delay;
@@ -44,8 +42,9 @@ public class Gui extends GuiScreen {
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "The GUI might not work on Window mode!"));
 				warn = true;
 			}
-		} else warn = false;
-
+		} else {
+			warn = false;
+		}
 
 		//Draw all the Gui Rectangles and their texts
 		out: for (int i = 0; i < Node.Nodes.size(); i++) {
@@ -87,7 +86,7 @@ public class Gui extends GuiScreen {
 		//Draw games thing
 		if (currentMode.equals("Games")) {
 			Snake.DrawSnake();
-			Tetris.DrawTetris(400, 150);
+			Tetris.DrawTetris(400, 150, false);
 			SoundGUI.drawSoundGUI();
 		}
 
@@ -95,7 +94,7 @@ public class Gui extends GuiScreen {
 		for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
 			if (n.isInRightMode()) {
-				if (!n.isAnExtend || n.getExtendParent().isExtended) {
+				if (!n.isAnExtend || n.isAnExtend && n.getExtendParent().isExtended) {
 					int color = 0xFF32a86d;
 					if (n.isAboveClickable() && n.isBelowClickable())
 						drawContainer(true, true, false, false, color, n);
@@ -146,7 +145,6 @@ public class Gui extends GuiScreen {
 
 		//Start and stop
 		Node n = Node.getNodeFromID("StartAndStop");
-		assert n != null;
 		if (AutoEat.IsElytrabotEnabled() || me.bebeli555.ElytraBot.Overworld.Main.toggle) {
 			n.setText("STOP", ChatFormatting.RED, 1F);
 			on = true;
@@ -163,8 +161,8 @@ public class Gui extends GuiScreen {
 	@Override
 	protected void mouseClicked(int x, int y, int button) {
 		if (currentMode.equals("Games")) {
-			Snake.OnClick(x, y);
-			SoundGUI.ClickEvent(x, y);
+			Snake.OnClick(x, y, button);
+			SoundGUI.ClickEvent(x, y, button);
 			//Start tetris 165, 140, 215, 155
 			if (165 * 2.5 < x && 215 * 2.5 > x && 140 * 2.5 < y && 155 * 2.5 > y) {
 				if (Tetris.GameOver) {
@@ -260,7 +258,7 @@ public class Gui extends GuiScreen {
 				n.value = Double.parseDouble(n.getStringValue());
 			else
 				n.value = Integer.parseInt(n.getStringValue());
-		} catch (Exception ignored)
+		} catch (Exception e2)
 		{
 		}
 	}
@@ -323,7 +321,7 @@ public class Gui extends GuiScreen {
 			Renderer.PositionsYellow.clear();
 			Renderer.PositionsRed.clear();
 			Renderer.PositionsGreen.clear();
-		} catch (Exception ignored) {
+		} catch (Exception e) {
 
 		}
 		if (Settings.getDouble("Speed") < originalSpeed) {
@@ -338,6 +336,7 @@ public class Gui extends GuiScreen {
 		Main.delay18 = 0;
 		me.bebeli555.ElytraBot.ElytraFly.FlyMinus = 0;
 		Renderer.IsRendering = false;
+		TakeOff.ActivatePacketFly = false;
 		me.bebeli555.ElytraBot.Settings.AutoRepair.AutoRepair = false;
 		AutoRepair.ArmorTakeoff = false;
 		if (Main.baritonetoggle) {
@@ -356,7 +355,7 @@ public class Gui extends GuiScreen {
 	public static void TurnOn() {
 		originalSpeed = Settings.getDouble("Speed");
 		SetStuff();
-		if (Objects.requireNonNull(Node.getNodeFromID("Highway")).parent) {
+		if (Node.getNodeFromID("Highway").parent) {
 			if (Settings.getBoolean("Diagonal")) {
 				me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;
 				me.bebeli555.ElytraBot.Settings.Diagonal.Check();
@@ -364,7 +363,7 @@ public class Gui extends GuiScreen {
 				me.bebeli555.ElytraBot.Highway.Main.toggle = true;
 				me.bebeli555.ElytraBot.Highway.Main.Check();
 			}
-		} else if (Objects.requireNonNull(Node.getNodeFromID("Overworld")).parent) {
+		} else if (Node.getNodeFromID("Overworld").parent) {
 			if (Main.FlySpeed > 2) {
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "The speed you are using is too high the Maximum speed for this mode to work is 2"));
 			}
