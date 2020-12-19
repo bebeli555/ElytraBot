@@ -44,9 +44,8 @@ public class Gui extends GuiScreen {
 				mc.player.sendMessage(new TextComponentString(ChatFormatting.DARK_AQUA + "ElytraBot: " + ChatFormatting.RED + "The GUI might not work on Window mode!"));
 				warn = true;
 			}
-		} else {
-			warn = false;
-		}
+		} else warn = false;
+
 
 		//Draw all the Gui Rectangles and their texts
 		out: for (int i = 0; i < Node.Nodes.size(); i++) {
@@ -96,7 +95,7 @@ public class Gui extends GuiScreen {
 		for (int i = 0; i < Node.Nodes.size(); i++) {
 			Node n = Node.Nodes.get(i);
 			if (n.isInRightMode()) {
-				if (!n.isAnExtend || n.isAnExtend && n.getExtendParent().isExtended) {
+				if (!n.isAnExtend || n.getExtendParent().isExtended) {
 					int color = 0xFF32a86d;
 					if (n.isAboveClickable() && n.isBelowClickable())
 						drawContainer(true, true, false, false, color, n);
@@ -147,6 +146,7 @@ public class Gui extends GuiScreen {
 
 		//Start and stop
 		Node n = Node.getNodeFromID("StartAndStop");
+		assert n != null;
 		if (AutoEat.IsElytrabotEnabled() || me.bebeli555.ElytraBot.Overworld.Main.toggle) {
 			n.setText("STOP", ChatFormatting.RED, 1F);
 			on = true;
@@ -260,7 +260,7 @@ public class Gui extends GuiScreen {
 				n.value = Double.parseDouble(n.getStringValue());
 			else
 				n.value = Integer.parseInt(n.getStringValue());
-		} catch (Exception e2)
+		} catch (Exception ignored)
 		{
 		}
 	}
@@ -323,7 +323,7 @@ public class Gui extends GuiScreen {
 			Renderer.PositionsYellow.clear();
 			Renderer.PositionsRed.clear();
 			Renderer.PositionsGreen.clear();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 
 		}
 		if (Settings.getDouble("Speed") < originalSpeed) {
@@ -338,7 +338,6 @@ public class Gui extends GuiScreen {
 		Main.delay18 = 0;
 		me.bebeli555.ElytraBot.ElytraFly.FlyMinus = 0;
 		Renderer.IsRendering = false;
-		TakeOff.ActivatePacketFly = false;
 		me.bebeli555.ElytraBot.Settings.AutoRepair.AutoRepair = false;
 		AutoRepair.ArmorTakeoff = false;
 		if (Main.baritonetoggle) {
@@ -357,7 +356,7 @@ public class Gui extends GuiScreen {
 	public static void TurnOn() {
 		originalSpeed = Settings.getDouble("Speed");
 		SetStuff();
-		if (Node.getNodeFromID("Highway").parent) {
+		if (Objects.requireNonNull(Node.getNodeFromID("Highway")).parent) {
 			if (Settings.getBoolean("Diagonal")) {
 				me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;
 				me.bebeli555.ElytraBot.Settings.Diagonal.Check();
