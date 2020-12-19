@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import scala.util.Random;
 
 public class Tetris extends GuiScreen{
-	//Tetris. Took a while to make so yall better play it!
+	//Tetris. A cool game, can be active while Snake is active lol, its fun.
 	
 	static Minecraft mc = Minecraft.getMinecraft();
 	static int fromX, toX;

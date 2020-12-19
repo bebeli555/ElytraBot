@@ -134,8 +134,7 @@ public class Snake extends GuiScreen{
 			drawRect(SnakeX, SnakeY, SnakeX + 20, SnakeY + 20, 0xFF55ff00);
 			drawRect(SnakeX + 3, SnakeY + 3, SnakeX + 8, SnakeY + 8, 0xFF000000);
 			for (int i = 0; i < BodyX.size(); i++) {
-				if (!BodyX.isEmpty())
-					drawRect(BodyX.get(i), BodyY.get(i), BodyX.get(i) + 20, BodyY.get(i) + 20, 0xFF55ff00);
+				drawRect(BodyX.get(i), BodyY.get(i), BodyX.get(i) + 20, BodyY.get(i) + 20, 0xFF55ff00);
 			}
 		}
 
@@ -175,7 +174,7 @@ public class Snake extends GuiScreen{
 		}
 	}
 
-	public static void OnClick(int i, int j, int k) {
+	public static void OnClick(int i, int j) {
 		//Start game 150, 150, 350, 350
 		if (150 < i && 350 > i && 150 < j && 350 > j)
 			if (GameOver) StartGame();
@@ -224,13 +223,11 @@ public class Snake extends GuiScreen{
 			AppleY = 150 + random2 * 20;
 
 			for (int i2 = 0; i2 < BodyX.size(); i2++) {
-				if (!BodyX.isEmpty()) {
-					if (BodyX.get(i2) == AppleX) {
-						if (BodyY.get(i2) == AppleY) {
-							AppleX = 0;
-							AppleY = 0;
-							break;
-						}
+				if (BodyX.get(i2) == AppleX) {
+					if (BodyY.get(i2) == AppleY) {
+						AppleX = 0;
+						AppleY = 0;
+						break;
 					}
 				}
 			}

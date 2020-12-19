@@ -161,8 +161,8 @@ public class Gui extends GuiScreen {
 	@Override
 	protected void mouseClicked(int x, int y, int button) {
 		if (currentMode.equals("Games")) {
-			Snake.OnClick(x, y, button);
-			SoundGUI.ClickEvent(x, y, button);
+			Snake.OnClick(x, y);
+			SoundGUI.ClickEvent(x, y);
 			//Start tetris 165, 140, 215, 155
 			if (165 * 2.5 < x && 215 * 2.5 > x && 140 * 2.5 < y && 155 * 2.5 > y) {
 				if (Tetris.GameOver) {
