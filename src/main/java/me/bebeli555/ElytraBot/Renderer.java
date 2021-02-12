@@ -1,8 +1,6 @@
 package me.bebeli555.ElytraBot;
 
 import java.util.ArrayList;
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 import me.bebeli555.ElytraBot.Overworld.Main;
 import me.bebeli555.ElytraBot.Settings.Settings;
@@ -17,16 +15,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Renderer extends GuiScreen {
 	static Minecraft mc = Minecraft.getMinecraft();
-	public static String elytrabotStatus;
 	public static boolean IsRendering = false;
-	
 	public static ArrayList<BlockPos> PositionsGreen = new ArrayList<BlockPos>();
-	public static ArrayList<BlockPos> PositionsRed = new ArrayList<BlockPos>();
-	public static ArrayList<BlockPos> PositionsYellow = new ArrayList<BlockPos>();
-	
 	static int delay = 0;
 	static int EstimatedHours, EstimatedMinutes, EstimatedSeconds, BlocksASec;
 	static BlockPos Latest;
@@ -106,16 +100,8 @@ public class Renderer extends GuiScreen {
 		IsRendering = true;
 		if (IsRendering == true) {
 			try {
-				for (int i = 0; i < PositionsYellow.size(); i++) {
-					BlockPos BlockPos4 = new BlockPos(PositionsYellow.get(i));
-					final AxisAlignedBB Axis = GetAxis(BlockPos4);
-					DrawPathBox(Axis, 0f, 0f, 1f, 1f, false, true);
-				}
-
 				for (int i = 0; i < PositionsGreen.size(); i++) {
-					BlockPos BlockPos4 = new BlockPos(PositionsGreen.get(i));
-					final AxisAlignedBB Axis = GetAxis(BlockPos4);
-					DrawPathBox(Axis, 0f, 0f, 1f, 1f, true, false);
+					drawPathBox(PositionsGreen.get(i), 0f, 1f, 0f, 1f);
 				}
 			} catch (Exception e22) {
 
@@ -123,85 +109,40 @@ public class Renderer extends GuiScreen {
 		}
 	}
 	
-    public static void DrawPathBox(AxisAlignedBB axisalignedbb, float red, float green, float blue, float alpha, boolean Green, boolean Yellow)
-    {
-        Tessellator ts = Tessellator.getInstance();
-        BufferBuilder vb = ts.getBuffer();
+    public static void drawPathBox(BlockPos pos, float red, float green, float blue, float alpha) {
+    	BlockPos next = PositionsGreen.get(PositionsGreen.indexOf(pos) + 1);
+    	if (next == null) {
+    		return;
+    	}
+    	
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         GlStateManager.disableDepth();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
-        if (Green == true) {
-        	//Green
-        	GL11.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-        } else if (Yellow == true){
-        	//Yellow
-        	GL11.glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-        } else {
-        	//Red
-        	GL11.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-        }
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        ts.draw();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        ts.draw();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        ts.draw();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        ts.draw();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        ts.draw();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).color(red, green, blue, alpha).endVertex();
-        ts.draw();
+        glEnable(GL_LINE_SMOOTH);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glLineWidth(1.5F);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+        AxisAlignedBB bb = GetAxis(pos);
+    	if (next.getX() > pos.getX()) {
+    		bufferbuilder.pos(bb.minX + 0.5, bb.maxY, bb.minZ + 0.5).color(red, green, blue, alpha).endVertex();
+        	bufferbuilder.pos(bb.maxX + 0.5, bb.maxY, bb.minZ + 0.5).color(red, green, blue, alpha).endVertex();
+    	} else if (next.getX() < pos.getX()) {
+    		bufferbuilder.pos(bb.minX - 0.5, bb.maxY, bb.minZ + 0.5).color(red, green, blue, alpha).endVertex();
+        	bufferbuilder.pos(bb.maxX - 0.5, bb.maxY, bb.minZ + 0.5).color(red, green, blue, alpha).endVertex();
+    	} else if (next.getZ() > pos.getZ()) {
+    		bufferbuilder.pos(bb.minX + 0.5, bb.maxY, bb.maxZ + 0.5).color(red, green, blue, alpha).endVertex();
+            bufferbuilder.pos(bb.minX + 0.5, bb.maxY, bb.minZ + 0.5).color(red, green, blue, alpha).endVertex();
+    	} else {
+            bufferbuilder.pos(bb.minX + 0.5, bb.maxY, bb.maxZ - 0.5).color(red, green, blue, alpha).endVertex();
+            bufferbuilder.pos(bb.minX + 0.5, bb.maxY, bb.minZ - 0.5).color(red, green, blue, alpha).endVertex();
+    	}
+        tessellator.draw();
+        glDisable(GL_LINE_SMOOTH);
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();

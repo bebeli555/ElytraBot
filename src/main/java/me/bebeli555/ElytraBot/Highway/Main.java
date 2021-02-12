@@ -15,10 +15,9 @@ import me.bebeli555.ElytraBot.ElytraFly;
 import me.bebeli555.ElytraBot.Gui.Gui;
 import me.bebeli555.ElytraBot.Settings.Settings;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import baritone.api.BaritoneAPI;
 
 public class Main {
-	//Variables are cool!
+	//This code is shit wrote it along time ago and too lazy to fix it now.
 	static Minecraft mc = Minecraft.getMinecraft();
 	public static boolean toggle = false;
 	public static EnumFacing direction;
@@ -63,9 +62,6 @@ public class Main {
 	@SubscribeEvent
 	public void onUpdate(TickEvent.ClientTickEvent e) {
 		try {
-			// Check if baritone is installed
-			CheckIfBaritoneIsInstalled();
-
 			// uses baritone if the player is stuck...
 			UseBaritoneSetting();
 
@@ -603,19 +599,6 @@ public class Main {
 						bdelay2 = 0;
 					}
 				}
-			}
-		}
-	}
-	
-	public static void CheckIfBaritoneIsInstalled() {
-		if (baritonecheck == false) {
-			baritonecheck = true;
-			try {
-				if (!BaritoneAPI.getProvider().getAllBaritones().isEmpty()) {
-					Settings.setValue("UseBaritone", true);
-				}
-			} catch (NoClassDefFoundError e5) {
-				
 			}
 		}
 	}

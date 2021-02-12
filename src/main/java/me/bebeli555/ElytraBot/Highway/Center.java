@@ -9,21 +9,7 @@ public class Center {
 	//This centers you on the middle of the block when going for a manuver
 	//If we dont do this then theres a change it will start clipping into a block
 	//It also centers the other way when going straight again in Manuver class
-	
 	static Minecraft mc = Minecraft.getMinecraft();
-	
-	//Centers the player and also activates manuver when done
-	public static void ManuverCenter (boolean Right) {
-		if (IsManuverCentered(Main.z)) {
-			return;
-		} else {
-			if (ShouldCenterBackwards()) {
-				CenterBackwards();
-			} else {
-				CenterForward();
-			}
-		}
-	}
 	
 	public static boolean IsManuverCentered(boolean Z) {
 		if (Z == false) {

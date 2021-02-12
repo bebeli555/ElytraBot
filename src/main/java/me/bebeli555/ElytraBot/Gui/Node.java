@@ -63,7 +63,7 @@ public class Node {
  		isExtended = !isExtended;
  		for (int i = 0; i < Nodes.size(); i++) {
  			Node n = Nodes.get(i);
- 			if (this.getX() == n.getX() && n.getY() > this.getY()) {
+ 			if (Math.abs(this.getX() - n.getX()) < 11 && n.getY() > this.getY()) {
  				if (n.mode.contains(Gui.currentMode) || n.mode.equals("null")) {
 					if (n.isAnExtend) {
 						if (this.Extends.contains(n)) {
@@ -71,9 +71,9 @@ public class Node {
 						}
 					}
 					if (isExtended) {
-						n.setCoordMultiplier(n.coordMultiplier[0] + 0, n.coordMultiplier[1] + ((20 * times) + 3));
+						n.setCoordMultiplier(n.coordMultiplier[0], n.coordMultiplier[1] + ((20 * times)));
 					} else {
-						n.setCoordMultiplier(n.coordMultiplier[0] + 0, n.coordMultiplier[1] + -((20 * times) + 3));
+						n.setCoordMultiplier(n.coordMultiplier[0], n.coordMultiplier[1] + -((20 * times)));
 					}
  				}
  			}

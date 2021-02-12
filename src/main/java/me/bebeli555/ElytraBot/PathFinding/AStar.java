@@ -82,6 +82,7 @@ public class AStar {
 				}
 			}
 		}
+		
 		return new ArrayList<BlockPos>();
 	}
 

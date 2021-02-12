@@ -35,6 +35,11 @@ public class Gui extends GuiScreen {
 	}
 
 	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+	
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 		if (!mc.isFullScreen()) {
@@ -324,8 +329,6 @@ public class Gui extends GuiScreen {
 		try {
 			GetPath.Path.clear();
 			me.bebeli555.ElytraBot.Overworld.GetPath.Path.clear();
-			Renderer.PositionsYellow.clear();
-			Renderer.PositionsRed.clear();
 			Renderer.PositionsGreen.clear();
 		} catch (Exception e) {
 			
@@ -359,8 +362,8 @@ public class Gui extends GuiScreen {
 	
 	//Turns elytrabot ON
 	public static void TurnOn() {
-		originalSpeed = Settings.getDouble("Speed");
 		SetStuff();
+		originalSpeed = Settings.getDouble("Speed");
 		if (Node.getNodeFromID("Highway").parent == true) {
 			if (Settings.getBoolean("Diagonal") == true) {
 				me.bebeli555.ElytraBot.Settings.Diagonal.toggle = true;

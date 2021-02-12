@@ -242,8 +242,8 @@ public class TakeOff {
 	}
 	
 	public static boolean HasElytraEquipped() {
-		ItemStack Elytra = mc.player.inventory.armorItemInSlot(2);
-		if (Elytra.getItem() == Items.ELYTRA) {
+		ItemStack elytra = mc.player.inventory.armorItemInSlot(2);
+		if (elytra.getItem() == Items.ELYTRA) {
 			return true;
 		}
 		return false;

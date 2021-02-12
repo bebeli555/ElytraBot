@@ -47,10 +47,9 @@ public class SetNodes {
 		n = new Node(430, 100, false, "Highway, Overworld");
 		n.setText("Settings:", ChatFormatting.GOLD, 1.25F);
 		
-		extend = new Node(430, 140, true, "Highway");
+		extend = new Node(435, 140, true, "Highway");
 		extend.setText("Blocks: ", ChatFormatting.DARK_AQUA, 1F);
 		extend.id = "usebaritoneBlocks";
-		extend.setColor(0x36F700FF);
 		extend.setTypeAble(true);
 		extend.isAnExtend = true;
 		extend.addTip("The amount of blocks baritone will walk");
@@ -63,18 +62,16 @@ public class SetNodes {
 		n.isExtendable = true;
 		n.Extends.add(extend);
 		
-		extend = new Node(430, 160, true, "Highway");
+		extend = new Node(435, 160, true, "Highway");
 		extend.setText("DropItems", null, 1F);
-		extend.setColor(0x36F700FF);
 		extend.isAnExtend = true;
 		extend.addTip("When Elytrabot is repairing armor with this on");
 		extend.addTip("It will drop useless items from ur inventory if its full");
 		extend.addTip("So it can take off the armor for maximum mending!");
 		Node extend2;
-		extend2 = new Node(430, 180, true, "Highway");
+		extend2 = new Node(435, 180, true, "Highway");
 		extend2.setText("Durability: ", ChatFormatting.DARK_AQUA, 1F);
 		extend2.id = "Durability";
-		extend2.setColor(0x36F700FF);
 		extend2.isAnExtend = true;
 		extend2.setTypeAble(true);
 		extend2.addTip("When elytra durability goes below");
@@ -184,10 +181,9 @@ public class SetNodes {
 		n.addTip("Uses packetfly with takeoff");
 		n.addTip("Best for servers that dont kick u for it!");
 		
-		extend = new Node(550, 250, true, "Highway");
+		extend = new Node(555, 250, true, "Highway");
 		extend.setText("Speed: ", ChatFormatting.DARK_AQUA, 1F);
 		extend.isAnExtend = true;
-		extend.setColor(0x36F700FF);
 		extend.addTip("This is the speed it will glide downwards");
 		extend.addTip("The lower the speed the lower it will fall.");
 		extend.allowDoubleValue = true;
@@ -235,8 +231,7 @@ public class SetNodes {
 		
 		//Add settings values to the nodes.
 		Settings.setSettings();
-		for (int i = 0; i < Node.Nodes.size(); i++) {
-			Node node = Node.Nodes.get(i);
+		for (Node node : Node.Nodes) {
 			node.setTextColor();
 			node.centerText(node.getRealText(), node.getScale());
 		}
